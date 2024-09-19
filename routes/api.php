@@ -3,6 +3,22 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\MytaskController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\CustomerQueryController;
+use App\Http\Controllers\HolidayController;
+use App\Http\Controllers\VendorController;
+use App\Http\Controllers\VendorTaskAssignController;
+use App\Http\Controllers\EmployeeTaskController;
+use App\Http\Controllers\AdminTaskController;
+use App\Http\Controllers\WebsitesettingController;
+use App\Http\Controllers\StaffTaskController;
+use App\Http\Controllers\LoginDetailsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +36,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login_alluser', [ApiController::class, 'AuthLogin']);
+
+Route::post('/logout_alluser',[ApiController::class,'logout']);
 

@@ -23,7 +23,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Login and get an API token",
+                "summary": "Login API",
                 "operationId": "811da7c9f7e1845d2ebf9fb052b20091",
                 "requestBody": {
                     "required": true,
@@ -80,7 +80,8 @@
                                             "example": {
                                                 "id": 1,
                                                 "name": "User",
-                                                "email": "user@example.com"
+                                                "email": "user@example.com",
+                                                "token": 1234
                                             }
                                         }
                                     },
@@ -106,6 +107,91 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Invalid login credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/logout_alluser": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout API",
+                "operationId": "b609b3dc31aabf417d6b71b07574ccee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "login_user_id"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "number",
+                                        "format": "number",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successfully"
+                                        },
+                                        "user": {
+                                            "type": "object",
+                                            "example": {
+                                                "token": 1
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Something Went Wrong"
                                         }
                                     },
                                     "type": "object"

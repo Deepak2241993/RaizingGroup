@@ -35,7 +35,7 @@ use App\Http\Controllers\LoginDetailsController;
 
 
 Route::get('/',[AdminController::class,'login']);
-Route::get('/logout',[AdminController::class,'logout']);
+// Route::get('/logout',[AdminController::class,'logout']);
 Route::post('/login',[AdminController::class,'AuthLogin'])->name('login');
 
 Route::post('/user_type','StaffTaskController@UserType')->name('user_type');

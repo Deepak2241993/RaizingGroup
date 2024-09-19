@@ -31,7 +31,7 @@ class ApiController extends Controller
 /**
  * @OA\Post(
  *     path="/login_alluser",
- *     summary="Login and get an API token",
+ *     summary="Login API",
  *     tags={"Authentication"},
  *     @OA\RequestBody(
  *         required=true,
@@ -49,7 +49,7 @@ class ApiController extends Controller
  *             @OA\Property(property="success", type="boolean", example=true),
  *             @OA\Property(property="error", type="boolean", example=false),
  *             @OA\Property(property="message", type="string", example="Login successfully"),
- *             @OA\Property(property="user", type="object", example={"id":1,"name":"User","email":"user@example.com"})
+ *             @OA\Property(property="user", type="object", example={"id":1,"name":"User","email":"user@example.com","token":1234})
  *         )
  *     ),
  *     @OA\Response(
@@ -91,14 +91,15 @@ public function AuthLogin(Request $request) {
         }
 
         // Log login details, but avoid using sessions
-        LoginDetails::create($data);
+       $login_token = LoginDetails::create($data);
 
         // Example of how to generate a response without sessions
         $response = [
             'success' => true,
             'error' => false,
             'message' => 'Login successfully',
-            'user' => $user
+            'user' => $user,
+            'token'=>$login_token->id
         ];
 
         return response()->json($response);
@@ -110,8 +111,64 @@ public function AuthLogin(Request $request) {
         ], 401);
     }
 }
+/**
+ * @OA\POST(
+ *     path="/logout_alluser",
+ *     summary="Logout API",
+ *     tags={"Authentication"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"login_user_id"},
+ *             @OA\Property(property="token", type="number", format="number", example=1),
 
-
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful login",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="error", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Logout successfully"),
+ *             @OA\Property(property="user", type="object", example={"token":1})
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="error", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Something Went Wrong")
+ *         )
+ *     )
+ * )
+ */
+public function logout(Request $request,LoginDetails $loginDetails) {
+        $id= $request->token;
+        $data = LoginDetails::find($id);
+        $logout_time = date('H:i:s');
+        $ip = $request->ip();       // Correct method to get the client's IP address.
+            $data['ip'] = $ip;       // Correct method to get the client's IP address.
+            $location = Location::get($ip);
+            $logout_lat="";
+            $logout_long="";
+            if ($location) {
+                $logout_lat = $location->latitude;
+                $logout_long = $location->longitude;
+            }
+        LoginDetails::where('id', $id)->update(['logout_time' => $logout_time, 'current_status' => 0,'logout_lat'=>$logout_lat,'logout_long'=>$logout_long]);
+        Auth::logout();
+        // Build response
+        $response = [
+            'success' => true,
+            'error' => false,
+            'message' => 'Logout successfully'
+        ];
+        // Return a JSON response
+        return response()->json($response);
+      }
 
 
 }
