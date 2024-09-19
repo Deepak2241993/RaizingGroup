@@ -35,7 +35,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// For Authintication
 Route::post('/login_alluser', [ApiController::class, 'AuthLogin']);
-
 Route::post('/logout_alluser',[ApiController::class,'logout']);
+
+// For Company and Brand
+Route::post('/company', [CompanyController::class, 'store']);
 

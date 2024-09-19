@@ -201,6 +201,145 @@
                     }
                 }
             }
+        },
+        "/company": {
+            "post": {
+                "tags": [
+                    "Company"
+                ],
+                "summary": "Create a new company",
+                "operationId": "cc66eb61ef990224e42be56da6d61e29",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "company_name",
+                                    "tax_location",
+                                    "email",
+                                    "city",
+                                    "country"
+                                ],
+                                "properties": {
+                                    "company_name": {
+                                        "type": "string",
+                                        "example": "Example Company"
+                                    },
+                                    "tax_id": {
+                                        "type": "string",
+                                        "example": "GST12345678"
+                                    },
+                                    "tax_location": {
+                                        "type": "string",
+                                        "example": "Jammu"
+                                    },
+                                    "tax_document": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "tax_card": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "tax_number": {
+                                        "type": "string",
+                                        "example": "TAN12345678"
+                                    },
+                                    "company_id": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "billing_address": {
+                                        "type": "string",
+                                        "example": "123 Street, City"
+                                    },
+                                    "billing_location": {
+                                        "type": "string",
+                                        "example": "New Delhi"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "abc@gmail.com"
+                                    },
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "9876543210"
+                                    },
+                                    "head_address_office": {
+                                        "type": "string",
+                                        "example": "Head Office Address"
+                                    },
+                                    "street": {
+                                        "type": "string",
+                                        "example": "Street"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "City"
+                                    },
+                                    "postal_code": {
+                                        "type": "number",
+                                        "example": "110012"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "India"
+                                    },
+                                    "web_link": {
+                                        "type": "url",
+                                        "example": "http://example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Company created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Company created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid data provided"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

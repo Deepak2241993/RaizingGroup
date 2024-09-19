@@ -27,93 +27,93 @@ class AdminController extends Controller
             return view('admin.login');
         }
     }
-    public function AuthLogin(Request $request){
+    // public function AuthLogin(Request $request){
         
-        $this->validate($request, [
-            'email'   => 'required|email',
-            'password'  => 'required|min:8',
-            'type'=>'required'
-        ]);
+    //     $this->validate($request, [
+    //         'email'   => 'required|email',
+    //         'password'  => 'required|min:8',
+    //         'type'=>'required'
+    //     ]);
         
-        $credentials = $request->only('email', 'password');
-        $credentials['type'] = $request->input('type');
-        $credentials['status'] = 1;
+    //     $credentials = $request->only('email', 'password');
+    //     $credentials['type'] = $request->input('type');
+    //     $credentials['status'] = 1;
         
-        if(Auth::attempt($credentials))
-        {
-            $data['uemail'] = $request->email;  // Ensure the email is sanitized/validated as needed.
-            $ip = $request->ip();       // Correct method to get the client's IP address.
-            $data['ip'] = $ip;       // Correct method to get the client's IP address.
-            $location = Location::get($ip);
-            if ($location) {
-                $latitude = $location->latitude;
-                $longitude = $location->longitude;
+    //     if(Auth::attempt($credentials))
+    //     {
+    //         $data['uemail'] = $request->email;  // Ensure the email is sanitized/validated as needed.
+    //         $ip = $request->ip();       // Correct method to get the client's IP address.
+    //         $data['ip'] = $ip;       // Correct method to get the client's IP address.
+    //         $location = Location::get($ip);
+    //         if ($location) {
+    //             $latitude = $location->latitude;
+    //             $longitude = $location->longitude;
 
-                $data['latitude'] = $latitude;       // Correct method to get the client's IP address.
-                $data['longitude'] = $longitude;       // Correct method to get the client's IP address.
-            }
+    //             $data['latitude'] = $latitude;       // Correct method to get the client's IP address.
+    //             $data['longitude'] = $longitude;       // Correct method to get the client's IP address.
+    //         }
 
         
-            $data['login_time'] = date('H:i:s'); // Correct format for time.
-            $data['login_date'] = date('m-d-Y'); // This format is fine.
-            $data['current_status'] = 1;
+    //         $data['login_time'] = date('H:i:s'); // Correct format for time.
+    //         $data['login_date'] = date('m-d-Y'); // This format is fine.
+    //         $data['current_status'] = 1;
            
-            $loged_id=LoginDetails::create($data);
-            $request->session()->put('login_session_id',$loged_id->id);
+    //         $loged_id=LoginDetails::create($data);
+    //         $request->session()->put('login_session_id',$loged_id->id);
         
-            $request->session()->put('type',Auth::user()->type);
-            if(Auth::user()->type=='master_admin')
-            {
-                return redirect(route('master-dashboard'));
-            }
-            if(Auth::user()->type=='Admin')
-            {
-                return redirect(route('admin-dashboard'));
-            }
+    //         $request->session()->put('type',Auth::user()->type);
+    //         if(Auth::user()->type=='master_admin')
+    //         {
+    //             return redirect(route('master-dashboard'));
+    //         }
+    //         if(Auth::user()->type=='Admin')
+    //         {
+    //             return redirect(route('admin-dashboard'));
+    //         }
            
-            if(Auth::user()->type=='HR')
-            {
-                return redirect(route('hr-dashboard'));
-            }
-            if(Auth::user()->type=='Employee')
-            {
-                return redirect(route('employee-dashboard'));
-            }
-            if(Auth::user()->type=='Vendor')
-            {
-                return redirect(route('vendor-dashboard'));
-            }
+    //         if(Auth::user()->type=='HR')
+    //         {
+    //             return redirect(route('hr-dashboard'));
+    //         }
+    //         if(Auth::user()->type=='Employee')
+    //         {
+    //             return redirect(route('employee-dashboard'));
+    //         }
+    //         if(Auth::user()->type=='Vendor')
+    //         {
+    //             return redirect(route('vendor-dashboard'));
+    //         }
             
-        }
-        else {
-            return redirect()->back()->withInput($request->only('email', 'type'))->withErrors([
-                'password' => 'Invalid email or password.',
-            ]);
-        }
-    }
+    //     }
+    //     else {
+    //         return redirect()->back()->withInput($request->only('email', 'type'))->withErrors([
+    //             'password' => 'Invalid email or password.',
+    //         ]);
+    //     }
+    // }
     
     
     
     
 
-    public function logout(Request $request,LoginDetails $loginDetails) {
-        $id= Session::get('login_session_id');
-        $data = LoginDetails::find($id);
-        $logout_time = date('H:i:s');
-        $ip = $request->ip();       // Correct method to get the client's IP address.
-            $data['ip'] = $ip;       // Correct method to get the client's IP address.
-            $location = Location::get($ip);
-            $logout_lat="";
-            $logout_long="";
-            if ($location) {
-                $logout_lat = $location->latitude;
-                $logout_long = $location->longitude;
-            }
-        LoginDetails::where('id', $id)->update(['logout_time' => $logout_time, 'current_status' => 0,'logout_lat'=>$logout_lat,'logout_long'=>$logout_long]);
-        Auth::logout();
-        $request->session()->pull('result');
-        return redirect('/');
-      }
+    // public function logout(Request $request,LoginDetails $loginDetails) {
+    //     $id= Session::get('login_session_id');
+    //     $data = LoginDetails::find($id);
+    //     $logout_time = date('H:i:s');
+    //     $ip = $request->ip();       // Correct method to get the client's IP address.
+    //         $data['ip'] = $ip;       // Correct method to get the client's IP address.
+    //         $location = Location::get($ip);
+    //         $logout_lat="";
+    //         $logout_long="";
+    //         if ($location) {
+    //             $logout_lat = $location->latitude;
+    //             $logout_long = $location->longitude;
+    //         }
+    //     LoginDetails::where('id', $id)->update(['logout_time' => $logout_time, 'current_status' => 0,'logout_lat'=>$logout_lat,'logout_long'=>$logout_long]);
+    //     Auth::logout();
+    //     $request->session()->pull('result');
+    //     return redirect('/');
+    //   }
 
       public function index()
       {
