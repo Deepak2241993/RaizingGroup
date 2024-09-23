@@ -42,3 +42,6 @@ Route::post('/logout_alluser',[ApiController::class,'logout']);
 // For Company and Brand
 Route::post('/company', [CompanyController::class, 'store']);
 
+
+// For Company and Brand
+Route::post('/dashboard', [ApiController::class, 'dashboard']);

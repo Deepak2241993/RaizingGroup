@@ -171,6 +171,92 @@ public function logout(Request $request,LoginDetails $loginDetails) {
       }
 
 
+      
+       /**
+ * @OA\Post(
+ *     path="/dashboard",
+ *     summary="Dashboard Data",
+ *     tags={"Dashboard"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"token"},
+ *             @OA\Property(property="token", type="string", format="integer", example="123456"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful login",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="error", type="boolean", example=false),
+ *             @OA\Property(property="message", type="string", example="Dashboard Data Found"),
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=false),
+ *             @OA\Property(property="error", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Invalid Token")
+ *         )
+ *     )
+ * )
+ */
+public function dashboard(Request $request)
+{
+    // Validation
+    $request->validate([
+        'token' => 'required|integer',
+    ]);
+
+    // Retrieve token from request
+    $token = $request->input('token');
+
+    // Find user by token
+    $result = LoginDetails::where('id', $token)->first();
+    
+    if ($result) {
+        // Count total employees and other stats
+        $total_employee = Employee::where('is_deleted', 0)->where('role', 0)->count();
+        $online_employee = LoginDetails::where('current_status', 1)->count();
+        $active_task = EmployeeTask::whereIn('status', [0, 2])->count(); // Tasks with status 0 or 2
+        $task_completed = EmployeeTask::where('status', 1)->count();
+        $user_data = User::where('email',$result->uemail)->first();
+        $mytask = AdminTask::where('emp_id',$user_data->id)->count();
+        
+        
+
+        // Create response
+        $response = [
+            'success' => true,
+            'error' => false,
+            'message' => 'Login successfully',
+            'data' => [
+                'total_employee' => $total_employee,
+                'online_employee' => $online_employee,
+                'active_task' => $active_task,
+                'task_completed' => $task_completed,
+                'mytask' => $mytask,
+                'user' => $result,  // Assuming $result is the user
+                'token' => $token   // Return the token itself
+            ]
+        ];
+
+        return response()->json($response, 200);
+    } else {
+        // Token is invalid
+        return response()->json([
+            'success' => false,
+            'error' => true,
+            'message' => 'Invalid Token'
+        ], 401);
+    }
+}
+
+
+
 }
 
 
