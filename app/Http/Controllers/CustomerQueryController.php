@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer_query;
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use App\Models\Employee;
 use App\Models\Company;
 use App\Mail\MailMytask;
 use Mail;
@@ -21,8 +22,9 @@ class CustomerQueryController extends Controller
      */
     public function index()
     {
+        $employees = Employee::where('is_deleted',0)->get();
         $data = Customer_query::where('is_deleted',0)->orderBy('id', 'DESC')->paginate(10);
-        return view('admin.customer-query.index', compact('data'));
+        return view('admin.customer-query.index', compact('data','employees'));
     }
 
     /**

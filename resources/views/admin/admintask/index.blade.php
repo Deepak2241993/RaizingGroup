@@ -19,6 +19,7 @@
                                 <th>#</th>
                                 <th>Reporter</th>
                                 <th>Task Assignee</th>
+                                <th>User Role</th>
                                 <th>Task Title</th>
                                 <th>Assign Date</th>
                                 <th>File</th>
@@ -33,6 +34,15 @@
                                 <th scope="row">{{$loop->iteration}}</th>
                                 <td>{{$value->repoter}}</td>
                                 <td>{{$value->taskAssigneTo}}</td>
+                                <td>
+                                    @if($value->role==0)
+                                    {{'Employee'}}
+                                    @elseif($value->role==1)
+                                    {{'Admin'}} 
+                                    @elseif($value->role==2)
+                                    {{'HR'}}
+                                    @endif
+                                </td>
                                 <td>{{$value->t_title}}</td>
                                 <td>{{$value->assign_date}}</td>
                                 <td>

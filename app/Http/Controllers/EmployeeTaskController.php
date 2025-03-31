@@ -68,7 +68,7 @@ class EmployeeTaskController extends Controller
         $repoter_mail=Auth::user()->email;
         $mailto=[$email_id,$repoter_mail];
         Mail::to($mailto)->send(new EmployeeTaskMail($result));
-        return redirect(route('employeetask.index'))->with('message','Task Created Successfully');
+        return back()->with('message','Task Created Successfully');
     }
 
     /**

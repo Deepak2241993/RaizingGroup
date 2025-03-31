@@ -94,8 +94,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group mb-4">
-                                    <label for="gst_location" class =" form-control-label">Tax Location<span class="text-danger">*</span></label>
-                                    <select name="gst_location" class="form-control" required>
+                                    <label for="gst_location" class =" form-control-label">Tax Location</label>
+                                    <select name="gst_location" class="form-control">
                                         @foreach($gst_locations as $value => $text)
                                             <option value="{{ $value }}" @if(isset($company)){{$value==$company->gst_location?'selected':''}}@endif>{{ $text }}</option>
                                         @endforeach
