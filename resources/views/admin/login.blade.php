@@ -33,11 +33,12 @@ $settings=App\Models\Websitesetting::find(1);
             <div class="row justify-content-center">
                <div class="col-md-8 col-lg-6 col-xl-5">
                   <div class="card overflow-hidden">
-                     <div class="bg-primary bg-soft">
+                     <div class="bg-soft" style="background-color: #000408;">
+
                         <div class="row">
                            <center>
-                              <div class="col-12 align-self-end">
-                                 <img src="{{url('/images/settings/'.$settings->web_logo)}}" alt="RR Web LOGO" class="img-fluid" height="50%" width="50%">
+                              <div class="col-12 align-self-end mb-2 mt-2">
+                                 <img src="{{url('/images/settings/'.$settings->web_logo)}}" alt="RR Web LOGO" class="img-fluid" width="50%">
                               </div>
                            </center>
                         </div>
