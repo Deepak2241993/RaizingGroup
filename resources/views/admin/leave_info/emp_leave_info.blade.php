@@ -23,6 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
                             @foreach($data as $value)
                             <tr>
                                 <th scope="row">{{$loop->iteration}}</th>
@@ -35,6 +36,14 @@
                                 <td>{{$value->leave_remaining}}</td>
                                 {{-- For Master Admin Section --}}
                                 @if(Auth::user()->type=='master_admin')
+                                
+                                @if($value->approve_status_of_admin==0 && $value->l_status==0)
+                                
+                                    <td><button type="button" class="btn btn-success btn-sm" onclick="approve({{$value->id}})">Leave Approved</button></td>
+                                    <td><button type="button" class="btn btn-danger btn-sm" onclick="reject({{$value->id}})">Leave Rejected</button></td>
+                                    
+                                @endif
+                            
                                     @if($value->l_status == 1)
                                     <td>  <button class="btn btn-primary btn-sm disabled">Leave Approved</button></td>
                                     @endif
@@ -42,13 +51,8 @@
                                         <td><button class="btn btn-warning btn-sm disabled">Leave Rejected</button></td>
                                     @endif
                                    {{-- For Master Admin Approval Section --}}
-                                    @if($value->approve_status_of_admin==1 && $value->l_status==0)
-                                    
-                                        <td><button type="button" class="btn btn-success btn-sm" onclick="approve({{$value->id}})">Leave Approved</button></td>
-                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="reject({{$value->id}})">Leave Rejected</button></td>
-                                        
-                                    @endif
-                                    {{-- For Master Admin Approval Section --}}
+
+                                    {{-- For HR/ Admin Approval Section --}}
                                 @elseif(Auth::user()->type=='Admin' || Auth::user()->type=='HR')
                                    @if($value->approve_status_of_admin	==1)
                                    <td>  <button class="btn btn-primary btn-sm disabled">Leave Approved</button></td>
@@ -63,6 +67,7 @@
                                     @endif  
                                 @else
 
+
                                    {{-- Employee Dashboar Section --}}
                                    @if($value->l_status	==1)
                                    <td>  <button class="btn btn-success btn-sm disabled">Leave Approved</button></td>
@@ -74,6 +79,8 @@
                                    <td>  <button class="btn btn-primary btn-sm disabled">Pending</button></td>
                                      @endif
                                 @endif
+
+
                                <!-- Modal -->
                             <div class="modal fade" id="modal_button{{$value->id}}" tabindex="-1" aria-labelledby="modal_button{{$value->id}}Label" aria-hidden="true">
                                 <div class="modal-dialog">
