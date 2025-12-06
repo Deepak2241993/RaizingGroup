@@ -1,103 +1,168 @@
 @extends('layouts.masteradmin')
+
 @section('body')
-<div class="page-content">
-<div class="row">
-    <div class="col-12">
-        @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-    <div class="card-body">
-                <div class="card">
-                <div class="card-header"><strong>Employee Task</strong><small> Form</small></div>
-               
-                @if(isset($employeeTask))
-                <form action="{{route('employeetask.update',$employeeTask->id)}}" method="post" enctype="multipart/form-data">
-                @method('PUT')
-                <input type="hidden" value="{{$employeeTask->id}}" name="id">
+
+<div class="content-wrapper">
+
+    <!-- Page Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+
+                <div class="col-sm-6">
+                    <h1>Employee Task Form</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('master-dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Employee Task</li>
+                    </ol>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {{ isset($employeeTask) ? 'Edit Employee Task' : 'Add Employee Task' }}
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Errors -->
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <!-- Form Start -->
+                    @if(isset($employeeTask))
+                        <form action="{{ route('employeetask.update', $employeeTask->id) }}" 
+                              method="post" enctype="multipart/form-data">
+                            @method('PUT')
+                            <input type="hidden" name="id" value="{{ $employeeTask->id }}">
                     @else
-                    <form action="{{route('employeetask.store')}}" method="post" enctype="multipart/form-data">
-                        @endif
+                        <form action="{{ route('employeetask.store') }}" 
+                              method="post" enctype="multipart/form-data">
+                    @endif
+
                         @csrf
-                    <div class="card-body card-block">
-                        <div class="form-group mb-4">
-                            <label for="emp_id" class=" form-control-label">Employee Name<span class="text-danger">*</span></label>
-                            <input type="text" readonly class="type form-control" value="{{isset($employee)?$employee->fname:''}}">
-                            <input type="hidden" name="emp_id" class="type form-control" value="{{isset($employee)?$employee->id:''}}">
-                           
+
+                        <div class="row">
+
+                            <!-- Employee Name -->
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Employee Name <span class="text-danger">*</span></label>
+                                <input type="text" readonly class="form-control"
+                                       value="{{ isset($employee) ? $employee->fname : '' }}">
+                                <input type="hidden" name="emp_id"
+                                       value="{{ isset($employee) ? $employee->id : '' }}">
+                            </div>
+
+                            <!-- Task Title -->
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Task Title <span class="text-danger">*</span></label>
+                                <input type="text" name="t_title" class="form-control"
+                                       value="{{ isset($employeeTask) ? $employeeTask->t_title : '' }}" required>
+                            </div>
+
+                            <!-- Deadline -->
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Deadline <span class="text-danger">*</span></label>
+                                <input type="date" name="deadline" id="deadline" class="form-control"
+                                       value="{{ isset($employeeTask) ? $employeeTask->deadline : '' }}"
+                                       required>
+                            </div>
+
+                            <!-- File -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Upload Files (if any)</label>
+                                @if(isset($employeeTask) && $employeeTask->t_file)
+                                    <p>
+                                        <a href="{{ url('/images/'.$employeeTask->t_file) }}" target="_blank">
+                                            View Existing File
+                                        </a>
+                                    </p>
+                                @endif
+                                <input type="file" name="t_file" class="form-control" multiple>
+                            </div>
+
+                            <!-- Task Detail -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Task Detail</label>
+                                <textarea name="t_detail" rows="4" class="form-control">{{ isset($employeeTask) ? $employeeTask->t_detail : '' }}</textarea>
+                            </div>
+
+                            <!-- Comments (Edit Mode Only) -->
+                            @if(isset($employeeTask))
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Comments</label>
+                                    <textarea name="comments" rows="4" class="form-control">{{ $employeeTask->comments }}</textarea>
+                                </div>
+
+                                <!-- Status -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Task Status</label>
+                                    <select name="status" class="form-select">
+                                        <option value="0" @if($employeeTask->status=='0') selected @endif>To Do</option>
+                                        <option value="2" @if($employeeTask->status=='2') selected @endif>In Progress</option>
+                                        <option value="1" @if($employeeTask->status=='1') selected @endif>Completed</option>
+                                    </select>
+                                </div>
+                            @endif
+
                         </div>
 
-                      <div class="form-group mb-4">
-                          <label class="form-control-label">Task Title<span class="text-danger">*</span></label>
-                          <input type="text" id="t_title" class="form-control" name="t_title" value="{{isset($employeeTask)?$employeeTask->t_title:''}}" required>
-                      </div>
-                      <div class="form-group mb-4">
-                        <label class="form-control-label">Deadline<span class="text-danger">*</span></label>
-                        <input type="date" id="deadline" class="form-control" name="deadline" value="{{isset($employeeTask)?$employeeTask->deadline:''}}" required>
-                    </div>
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary mt-3">
+                            {{ isset($employeeTask) ? 'Update' : 'Submit' }}
+                        </button>
 
-                      <div class="form-group mb-4">
-                          <label>Upload task related documents/images (if any)</label>
-                          @if(isset($employeeTask))
-                          <a href="{{url('/images/'.$employeeTask->t_file)}}">Task File</a>
-                          @endif
-                          <input type="file" name="t_file" multiple="multiple" class="form-control">
-                      </div>
-                      <div class="form-group mb-4">
-                          <label for="tdetail" class="form-control-label">Task Detail</label>
-                          <textarea name="t_detail" id="t_detail" rows="5" placeholder="Detail..." class="form-control">{{isset($employeeTask)?$employeeTask->t_detail:''}}</textarea>
-                      </div>
-                      @if(isset($employeeTask))
-                      <div class="form-group mb-4">
-                          <label for="comments" class="form-control-label">Comments</label>
-                          <textarea name="comments" id="comments" rows="5" placeholder="Comments..." class="form-control">{{isset($employeeTask)?$employeeTask->comments:''}}</textarea>
-                      </div>
-                      <div class="form-group mb-4">
-                          <label for="tdetail" class="form-control-label">Task Status</label>
-                          <select class="form-select" name="status">
-                              <option @if(isset($employeeTask) && $employeeTask->status=='0') selected="selected" @endif value="0">To Do</option>
-                              <option @if(isset($employeeTask) && $employeeTask->status=='2') selected="selected" @endif value="2">In Progress</option>
-                              <option @if(isset($employeeTask) && $employeeTask->status=='1') selected="selected" @endif value="1">Completed</option>
-                          </select>
-                      </div>
-                      @endif
-                      <div class="form-group mb-4">
-                        <input type="submit" name="cok" value="{{isset($employeeTask)?'Update':'Submit'}}" class="form-control btn btn-primary" id="Add_comp_submit" Name="Submit" style="margin-top: 15px; border-radius: 6px; width: 130px;"/>
-                      </div>
-                    </div>
-                </form>
+                        <a href="{{ route('employeetask.index') }}" class="btn btn-dark mt-3">Back</a>
+
+                    </form>
+
+                </div>
+
             </div>
+
         </div>
-    </div> <!-- end col -->
-</div>
+    </section>
+
 </div>
 
 @endsection
 
+
+
 @push('footer-section-code')
-<!-- include summernote css/js -->
+
+<!-- Summernote -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-      // Get the input field
-      const dateInput = document.getElementById('deadline');
-      
-      // Create a new Date object for today
-      const today = new Date();
-      
-      // Format the date as YYYY-MM-DD
-      const formattedDate = today.toISOString().split('T')[0];
-      
-      // Set the min attribute to today's date
-      dateInput.setAttribute('min', formattedDate);
-    });
-  </script>
-@endpush
+document.addEventListener('DOMContentLoaded', () => {
+    let dateInput = document.getElementById('deadline');
+    let today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+});
+</script>
 
+@endpush

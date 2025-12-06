@@ -33,16 +33,16 @@ class StaffTaskController extends Controller
             ->join('employees as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
             ->join('users as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
             ->select('staff_tasks.*', 'assigner.fname as assigner_name', 'assignee.name as assignee_name')
-            ->orderBy('staff_tasks.id', 'DESC')
-            ->paginate(20);
+            ->orderBy('staff_tasks.id', 'DESC')->get();
+            ;
 
             $task_assign_by_me = StaffTask::where('staff_tasks.is_deleted', 0)
             ->where('staff_tasks.task_assign_from', $suer_result->id)
             ->join('users as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
             ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
             ->select('staff_tasks.*', 'assigner.name as assigner_name', 'assignee.fname as assignee_name')
-            ->orderBy('staff_tasks.id', 'DESC')
-            ->paginate(20);
+            ->orderBy('staff_tasks.id', 'DESC')->get();
+            ;
             return view('admin.stafftask.index', compact('task_for_me','task_assign_by_me'));
         }
 
@@ -57,24 +57,24 @@ class StaffTaskController extends Controller
             ->join('users as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
             ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
             ->select('staff_tasks.*', 'assigner.name as assigner_name', 'assignee.fname as assignee_name')
-            ->orderBy('staff_tasks.id', 'DESC')
-            ->paginate(20);
+            ->orderBy('staff_tasks.id', 'DESC')->get();
+            ;
 
             $task_for_me =StaffTask::where('staff_tasks.is_deleted', 0)
             ->where('staff_tasks.task_assign_to', $emp_result->id)
             ->join('employees as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
             ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
             ->select('staff_tasks.*', 'assigner.fname as assigner_name', 'assignee.fname as assignee_name')
-            ->orderBy('staff_tasks.id', 'DESC')
-            ->paginate(20);
+            ->orderBy('staff_tasks.id', 'DESC')->get();
+            ;
 
             $task_assign_by_me = StaffTask::where('staff_tasks.is_deleted', 0)
             ->where('staff_tasks.task_assign_from', $emp_result->id)
             ->join('employees as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
             ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
             ->select('staff_tasks.*', 'assigner.fname as assigner_name', 'assignee.fname as assignee_name')
-            ->orderBy('staff_tasks.id', 'DESC')
-            ->paginate(20);
+            ->orderBy('staff_tasks.id', 'DESC')->get();
+            ;
             
             return view('admin.stafftask.index', compact('task_for_me','task_assign_by_me'));
         }
@@ -91,24 +91,24 @@ class StaffTaskController extends Controller
                 ->join('users as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
                 ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
                 ->select('staff_tasks.*', 'assigner.name as assigner_name', 'assignee.fname as assignee_name')
-                ->orderBy('staff_tasks.id', 'DESC')
-                ->paginate(20);
+                ->orderBy('staff_tasks.id', 'DESC')->get();
+                ;
 
                 $task_for_me =StaffTask::where('staff_tasks.is_deleted', 0)
                 ->where('staff_tasks.task_assign_to', $emp_result->id)
                 ->join('employees as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
                 ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
                 ->select('staff_tasks.*', 'assigner.fname as assigner_name', 'assignee.fname as assignee_name')
-                ->orderBy('staff_tasks.id', 'DESC')
-                ->paginate(20);
+                ->orderBy('staff_tasks.id', 'DESC')->get();
+                ;
 
                 $task_assign_by_me = StaffTask::where('staff_tasks.is_deleted', 0)
                 ->where('staff_tasks.task_assign_from', $emp_result->id)
                 ->join('employees as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
                 ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
                 ->select('staff_tasks.*', 'assigner.fname as assigner_name', 'assignee.fname as assignee_name')
-                ->orderBy('staff_tasks.id', 'DESC')
-                ->paginate(20);
+                ->orderBy('staff_tasks.id', 'DESC')->get();
+                ;
             
            
             //  HR Section END
@@ -124,8 +124,8 @@ class StaffTaskController extends Controller
                 ->join('employees as assigner', 'staff_tasks.task_assign_from', '=', 'assigner.id')
                 ->join('employees as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
                 ->select('staff_tasks.*', 'assigner.fname as assigner_name', 'assignee.fname as assignee_name')
-                ->orderBy('staff_tasks.id', 'DESC')
-                ->paginate(20);
+                ->orderBy('staff_tasks.id', 'DESC')->get();
+                ;
                 return view('admin.stafftask.index', compact('task_assign_by_me'));
         }
          

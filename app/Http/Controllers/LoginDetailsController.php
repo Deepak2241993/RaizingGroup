@@ -14,7 +14,7 @@ class LoginDetailsController extends Controller
      */
     public function index()
     {
-        $data = LoginDetails::OrderBy('id','DESC')->paginate(20);
+        $data = LoginDetails::OrderBy('id','DESC')->get();;
         return view('admin.settings.logindetails',compact('data'));
     }
     

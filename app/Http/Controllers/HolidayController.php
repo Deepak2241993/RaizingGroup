@@ -35,8 +35,8 @@ class HolidayController extends Controller
         ->join('companies', 'holidays.company_id', '=', 'companies.id')
         ->join('brands', 'holidays.brand_id', '=', 'brands.id')
         ->select('holidays.*', 'companies.compname as company_name','brands.bname as brand')
-        ->orderBy('holidays.id', 'DESC')
-        ->paginate(10);
+        ->orderBy('holidays.id', 'DESC')->get();
+        ;
         }
         else
         {
@@ -45,8 +45,8 @@ class HolidayController extends Controller
             ->join('companies', 'holidays.company_id', '=', 'companies.id')
             ->join('brands', 'holidays.brand_id', '=', 'brands.id')
             ->select('holidays.*', 'companies.compname as company_name','brands.bname as brand')
-            ->orderBy('holidays.id', 'DESC')
-            ->paginate(10);
+            ->orderBy('holidays.id', 'DESC')->get();
+            ;
         }
         return view('admin.holiday.index', compact('data'));
     }

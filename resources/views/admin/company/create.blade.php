@@ -39,175 +39,301 @@
     "Puducherry" => "34. Puducherry",
     "Andaman_&_Nicobar_Islands" => "35. Andaman & Nicobar Islands",
     "Telengana" => "36. Telengana",
-    "Andrapradesh" => "37. Andrapradesh"
+    "Andrapradesh" => "37. Andrapradesh",
+    "Dubai" => "38. United Arab Emirates",
+    "Colombo" => "38. Sri Lanka",
+    "Zagreb" => "39. Croatia",
+    "Amman" => "40. Jordan",
+    "Bangkok" => "40. Thailand"
 ];
 
 @endphp
-<style>
-    .sub_box{
-        height: 80%;
-        border: solid 1px;
-        width: 50%;
-        margin-top: 10px;
-        align-self: center;
 
-    }
-</style>
-<div class="page-content">
-<div class="row">
-    <div class="col-12">
-        @if ($errors->any())
-    <div class="alert alert-text-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-        <div class="card">
-            <div class="card-body">
-                <div class="card">
-                        <div class="card-header"><strong>Company</strong><small> Form</small>
-                       
-                            </div>
-                        @if(isset($company))
-                        <form action="{{route('company.update',$company->id)}}" method="post" enctype="multipart/form-data">
+
+
+<div class="content-wrapper">
+
+    <!-- Page Header -->
+    <section class="content-header">
+      <div class="container-fluid">
+
+        <div class="row mb-2">
+
+          <div class="col-sm-6">
+            <h1>{{ isset($company) ? 'Edit Company' : 'Add Company' }}</h1>
+          </div>
+
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item">
+                <a href="{{ route('master-dashboard') }}">Home</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="{{ route('company.index') }}">Company</a>
+              </li>
+              <li class="breadcrumb-item active">
+                {{ isset($company) ? 'Edit Company' : 'New Company' }}
+              </li>
+            </ol>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <!-- Error Messages -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- Company Form -->
+            <div class="card">
+
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <strong>Company</strong> 
+                        <small class="text-muted">Form</small>
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    @if(isset($company))
+                        <form action="{{ route('company.update',$company->id) }}" method="post" enctype="multipart/form-data">
                         @method('PUT')
-                            @else
-                    <form action="{{route('company.store')}}" method="post" enctype="multipart/form-data">
-                        @endif
-                        @csrf
-                        <div class="card-body card-block">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                    <label for="company" class=" form-control-label">Company<span class="text-danger">*</span></label>
-                                    <input type="text" id="compname" name="compname" placeholder="Enter your company name" class="form-control" required value="{{isset($company)?$company->compname:''}}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                    <label for="cgst" class=" form-control-label">Tax ID</label>
-                                    <input type="text" id="cgst" name="cgst"  value="{{isset($company)?$company->cgst:''}}" placeholder="Enter company Tax ID" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                    <label for="gst_location" class =" form-control-label">Tax Location</label>
-                                    <select name="gst_location" class="form-control">
-                                        @foreach($gst_locations as $value => $text)
-                                            <option value="{{ $value }}" @if(isset($company)){{$value==$company->gst_location?'selected':''}}@endif>{{ $text }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                    <div class="form-group mb-4">
-                                        <label for="gst_file" class=" form-control-label">Tax Document</label>
-                                        <input type="file" id="gst_file"  class="form-control" name="gst_file">
-                                    </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                    <label for="cpan" class=" form-control-label">Tax Card</label>
-                                    <input type="file" id="cpan"  class="form-control" name="cpan" value="{{isset($company)?$company->cpan:''}}">
-                                </div>
-                            </div>
+                    @else
+                        <form action="{{ route('company.store') }}" method="post" enctype="multipart/form-data">
+                    @endif
 
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                    <label for="tan" class=" form-control-label">TAX Number</label>
-                                    <input type="text" id="tan" name="tan" value="{{isset($company)?$company->tan:''}}" placeholder="Enter  TAX number" class="form-control">
-                                </div>
+                    @csrf
+
+                    <div class="row">
+
+                        <!-- Company Name -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Company <span class="text-danger">*</span></label>
+                                <input type="text" name="compname" 
+                                       class="form-control"
+                                       value="{{ $company->compname ?? '' }}" 
+                                       placeholder="Enter company name" required>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                    <label for="mca" class=" form-control-label">Company ID </label>
-                                    <input type="file" id="mca"  class="form-control" name="mca" >
-                                </div>
+                        </div>
+
+                        <!-- Tax ID -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tax ID</label>
+                                <input type="text" name="cgst"
+                                       class="form-control" 
+                                       value="{{ $company->cgst ?? '' }}"
+                                       placeholder="Enter Tax ID">
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                    <label for="billing_address" class=" form-control-label">Billing Address</label>
-                                    <input type="text" id="billing_address" placeholder="Enter Billing Address" class="form-control" name="billing_address" value="{{isset($company)?$company->billing_address:''}}">
-                                </div>
+                        </div>
+
+                        <!-- Tax Location -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tax Location</label>
+                                <select name="gst_location" class="form-control">
+                                    @foreach($gst_locations as $value => $text)
+                                        <option value="{{ $value }}"
+                                            {{ isset($company) && $company->gst_location == $value ? 'selected' : '' }}>
+                                            {{ $text }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group mb-4">
-                                <label for="billing_address_location" class =" form-control-label">Billing Address Location</label>
-                                <input type="text" id="billing_address_location" placeholder="Enter Billing Address" class="form-control" name="billing_address_location" value="{{isset($company)?$company->billing_address_location:''}}">
-                                </div>
+                        </div>
+
+                        <!-- Tax Document -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tax Document</label>
+                                <input type="file" name="gst_file" class="form-control">
                             </div>
-                            <div class="col-md-4">
-                          <div class="form-group mb-4">
-                              <label for="compemail" class=" form-control-label">Email Add<span class="text-danger">*</span></label>
-                              <input type="email" name="compemail" value="{{isset($company)?$company->compemail:''}}" id="compemail" placeholder="Enter Email Address" class="form-control" required>
-                          </div>
                         </div>
-                          <div class="col-md-4">
-                          <div class="form-group mb-4">
-                              <label for="vat" class=" form-control-label">Mobile<span class="text-danger">*</span></label>
-                              <input type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" name="compmob" value="{{isset($company)?$company->compmob:''}}" id="compmob" placeholder="Enter Mobile Number" class="form-control" required>
-                          </div>
+
+                        <!-- Tax Card -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tax Card</label>
+                                <input type="file" name="cpan" class="form-control">
+                            </div>
                         </div>
-                          <div class="col-md-4">
-                           <div class="form-group mb-4">
-                              <label for="head_office_address" class=" form-control-label">Head Office Address<span class="text-danger">*</span></label>
-                              <input type="headoffice" name="head_office_address" value="{{isset($company)?$company->head_office_address:''}}" id="head_office_address" placeholder="Head Office Address" class="form-control"required>
-                          </div>
+
+                        <!-- TAN -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>TAX Number</label>
+                                <input type="text" name="tan"
+                                       class="form-control"
+                                       value="{{ $company->tan ?? '' }}"
+                                       placeholder="Enter TAX number">
+                            </div>
                         </div>
-                          <div class="col-md-4">
-                          <div class="form-group mb-4">
-                              <label for="compstreet" class=" form-control-label">Street<span class="text-danger">*</span></label>
-                              <input type="text" name="compstreet" value="{{isset($company)?$company->compstreet:''}}" id="compstreet" placeholder="Enter Street " class="form-control"required>
-                          </div>
+
+                        <!-- Company ID -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Company ID Document</label>
+                                <input type="file" name="mca" class="form-control">
+                            </div>
                         </div>
-                          <div class="col-md-4">
-                          <div class="form-group mb-4">
-                              <label for="compcity" class=" form-control-label">City<span class="text-danger">*</span></label>
-                              <input type="text" name="compcity" value="{{isset($company)?$company->compcity:''}}" id="compcity" placeholder="Enter City Name" class="form-control"required>
-                          </div>
+
+                        <!-- Billing Address -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Billing Address</label>
+                                <input type="text" name="billing_address"
+                                       class="form-control" 
+                                       value="{{ $company->billing_address ?? '' }}"
+                                       placeholder="Enter Billing Address">
+                            </div>
                         </div>
-                          <div class="col-md-4">
-                          <div class="form-group mb-4">
-                              <label for="compcode" class=" form-control-label">Postal Code</label>
-                              <input type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==6) return false;" name="compcode" value="{{isset($company)?$company->compcode:''}}" id="compcode" placeholder="Enter Postal Code" class="form-control">
-                          </div>
+
+                        <!-- Billing Address Location -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Billing Address Location</label>
+                                <input type="text" name="billing_address_location"
+                                       class="form-control" 
+                                       value="{{ $company->billing_address_location ?? '' }}"
+                                       placeholder="Billing Address Location">
+                            </div>
                         </div>
-                          <div class="col-md-4">
-                          <div class="form-group mb-4">
-                              <label for="compcountry" class=" form-control-label">Country<span class="text-danger">*</span></label>
-                              <input type="text" name="compcountry" value="{{isset($company)?$company->compcountry:''}}" id="compcountry" placeholder="Enter Country Name" class="form-control" required>
-                          </div>
+
+                        <!-- Email -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Email <span class="text-danger">*</span></label>
+                                <input type="email" name="compemail" 
+                                       class="form-control" 
+                                       value="{{ $company->compemail ?? '' }}"
+                                       placeholder="Enter Email" required>
+                            </div>
                         </div>
-                          <div class="col-md-4">
-                          <div class="form-group mb-4">
-                              <label for="web_link" class=" form-control-label">Website link</label>
-                              <input type="url" name="web_link" value="{{isset($company)?$company->web_link:''}}" id="web_link" placeholder="Enter Website link" class="form-control">
-                          </div>
+
+                        <!-- Mobile -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Mobile <span class="text-danger">*</span></label>
+                                <input type="number" name="compmob" maxlength="10"
+                                       class="form-control"
+                                       value="{{ $company->compmob ?? '' }}"
+                                       placeholder="Enter Mobile No" required>
+                            </div>
                         </div>
+
+                        <!-- Head Office Address -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Head Office Address <span class="text-danger">*</span></label>
+                                <input type="text" name="head_office_address"
+                                       class="form-control"
+                                       value="{{ $company->head_office_address ?? '' }}"
+                                       placeholder="Head Office Address" required>
+                            </div>
+                        </div>
+
+                        <!-- Street -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Street <span class="text-danger">*</span></label>
+                                <input type="text" name="compstreet" 
+                                       class="form-control"
+                                       value="{{ $company->compstreet ?? '' }}"
+                                       placeholder="Enter Street" required>
+                            </div>
+                        </div>
+
+                        <!-- City -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>City <span class="text-danger">*</span></label>
+                                <input type="text" name="compcity" 
+                                       class="form-control"
+                                       value="{{ $company->compcity ?? '' }}"
+                                       placeholder="Enter City" required>
+                            </div>
+                        </div>
+
+                        <!-- Postal Code -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Postal Code</label>
+                                <input type="number" name="compcode"
+                                       class="form-control"
+                                       value="{{ $company->compcode ?? '' }}"
+                                       placeholder="Enter Postal Code">
+                            </div>
+                        </div>
+
+                        <!-- Country -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Country <span class="text-danger">*</span></label>
+                                <input type="text" name="compcountry"
+                                       class="form-control"
+                                       value="{{ $company->compcountry ?? '' }}"
+                                       placeholder="Enter Country" required>
+                            </div>
+                        </div>
+
+                        <!-- Website -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Website Link</label>
+                                <input type="url" name="web_link"
+                                       class="form-control"
+                                       value="{{ $company->web_link ?? '' }}"
+                                       placeholder="Enter Website URL">
+                            </div>
+                        </div>
+
+                    </div> <!-- end row -->
+
+                    <!-- Submit Buttons -->
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary" style="width:130px;">
+                            {{ isset($company) ? 'Update' : 'Submit' }}
+                        </button>
+
+                        <a href="{{ route('company.index') }}" 
+                           class="btn btn-dark" style="width:130px;">
+                           Back
+                        </a>
                     </div>
 
-                    <input type="submit" name="cok" value="{{isset($company)?'Update':'Submit'}}" class="form-control btn btn-primary" id="Add_comp_submit" Name="Submit" style="margin-top: 15px; border-radius: 6px; width: 130px;"   />
-                    <a href="{{route('company.index')}}" class="btn btn-dark" style="margin-top: 15px; border-radius: 6px; width: 130px;" >Back</a>       
+                </form>
+
                 </div>
-                    </form>
-                    
-                  </div>
-                </div>
+
             </div>
+
         </div>
-    </div> <!-- end col -->
-</div>
+    </section>
+
 </div>
 
 @endsection
 
+
 @push('footer-section-code')
-<!-- include summernote css/js -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+
+<!-- Summernote (optional) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
 @endpush
-

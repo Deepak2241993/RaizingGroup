@@ -117,7 +117,7 @@ class AdminController extends Controller
 
       public function index()
       {
-          $data = Admin::where('is_deleted',0)->orderBy('id', 'DESC')->paginate(20);
+          $data = Admin::where('is_deleted',0)->orderBy('id', 'DESC')->get();
           return view('admin.admins.index', compact('data'));
       }
 

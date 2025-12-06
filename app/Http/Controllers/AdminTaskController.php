@@ -23,8 +23,8 @@ class AdminTaskController extends Controller
         // $data = AdminTask::where('admin_tasks.is_deleted', 0)
         // ->join('admins', 'admin_tasks.emp_id', '=', 'admins.id')
         // ->select('admin_tasks.*', 'admins.fname as admin_name')
-        // ->orderBy('admin_tasks.id', 'DESC')
-        // ->paginate(20);
+        // ->orderBy('admin_tasks.id', 'DESC')->get();
+        // ;
         $type=Auth::user()->type;
         if($type=='master_admin')
         {
@@ -34,8 +34,8 @@ class AdminTaskController extends Controller
         ->join('employees', 'staff_tasks.task_assign_to', '=', 'employees.id')
         // ->join('users as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
         ->select('staff_tasks.*','repoter.fname as repoter','employees.fname as taskAssigneTo')
-        ->orderBy('staff_tasks.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('staff_tasks.id', 'DESC')->get();
+        ;
         }
         if($type=='Admin')
         {
@@ -45,8 +45,8 @@ class AdminTaskController extends Controller
         ->join('employees', 'staff_tasks.task_assign_to', '=', 'employees.id')
         // ->join('users as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
         ->select('staff_tasks.*','repoter.fname as repoter','employees.fname as taskAssigneTo')
-        ->orderBy('staff_tasks.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('staff_tasks.id', 'DESC')->get();
+        ;
         }
         if($type=='HR')
         {
@@ -56,8 +56,8 @@ class AdminTaskController extends Controller
         ->join('employees', 'staff_tasks.task_assign_to', '=', 'employees.id')
         // ->join('users as assignee', 'staff_tasks.task_assign_to', '=', 'assignee.id')
         ->select('staff_tasks.*','repoter.fname as repoter','employees.fname as taskAssigneTo')
-        ->orderBy('staff_tasks.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('staff_tasks.id', 'DESC')->get();
+        ;
         }
 
         return view('admin.admintask.index', compact('data'));

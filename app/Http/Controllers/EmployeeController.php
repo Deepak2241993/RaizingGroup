@@ -28,8 +28,8 @@ class EmployeeController extends Controller
             $data = Employee::where('employees.is_deleted', 0)
                 ->join('brands', 'employees.empbrand', '=', 'brands.id')
                 ->select('employees.*', 'brands.bname')
-                ->orderBy('employees.id', 'DESC')
-                ->paginate(20);
+                ->orderBy('employees.id', 'DESC')->get();
+                ;
         
         
         return view('admin.employee.index', compact('data'));
@@ -115,7 +115,6 @@ class EmployeeController extends Controller
             'type' => 'Employee',
         ]);
         $mailresult=['email'=>$request->official_id,'password'=>$request->empmob[0]];
-        
         Mail::to($request->official_id)
         ->cc($request->personal_id) // Use cc or bcc if there are multiple recipients
         ->send(new EmployeeMail($mailresult));
@@ -155,6 +154,8 @@ class EmployeeController extends Controller
         ->cc($request->personal_id) // Use cc or bcc if there are multiple recipients
         ->send(new HRMail($mailresult));
         }
+
+        
         return redirect(route('employee.index'))->with('message','employee Created Successfully');
     }
 

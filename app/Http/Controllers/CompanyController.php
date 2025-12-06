@@ -15,7 +15,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $data = Company::where('is_deleted',0)->orderBy('id', 'DESC')->paginate(10);
+        $data = Company::where('is_deleted',0)->orderBy('id', 'DESC')->get();
         return view('admin.company.index', compact('data'));
         
     }
@@ -70,8 +70,8 @@ class CompanyController extends Controller
         ->where('bcomp',$company->id)
         ->join('companies', 'brands.bcomp', '=', 'companies.id')
         ->select('brands.*', 'companies.compname as comp_name')
-        ->orderBy('brands.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('brands.id', 'DESC')->get();
+        ;
         return view('admin.brands.index', compact('data'));
     }
 

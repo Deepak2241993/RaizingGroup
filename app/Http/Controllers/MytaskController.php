@@ -22,10 +22,10 @@ class MytaskController extends Controller
         $data = Mytask::where('mytasks.is_deleted', 0)
         ->join('brands', 'mytasks.brand', '=', 'brands.id')
         ->select('mytasks.*', 'brands.bname as brand_name')
-        ->orderBy('mytasks.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('mytasks.id', 'DESC')->get();
+        ;
 
-        // $data = Mytask::where('is_deleted',0)->orderBy('id', 'DESC')->paginate(10);
+        // $data = Mytask::where('is_deleted',0)->orderBy('id', 'DESC')->get();
         return view('admin.tasks.index', compact('data'));
     }
 

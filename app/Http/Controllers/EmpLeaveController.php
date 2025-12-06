@@ -25,8 +25,8 @@ class EmpLeaveController extends Controller
         $data = EmpLeave::where('emp_leaves.is_deleted', 0)
         ->join('employees', 'emp_leaves.emp_id', '=', 'employees.id')
         ->select('emp_leaves.*', 'employees.fname')
-        ->orderBy('emp_leaves.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('emp_leaves.id', 'DESC')->get();
+        ;
         return view('admin.leave_info.emp_leave_info', compact('data'));
     }
 
@@ -40,9 +40,8 @@ class EmpLeaveController extends Controller
         $user_name=Auth::user()->name;
         $user_email=Auth::user()->email;
         $leaveresult=Employee::where('official_id','=',$user_email)->where('fname','=',$user_name)->first();
-
         // find DOJ
-        $effectiveDate = date('Y-m-d', strtotime("+3 months", strtotime($leaveresult->doj)));  
+        $effectiveDate = date('Y-m-d', strtotime("+3 months", strtotime($leaveresult->doj))); 
         if($effectiveDate <= date('Y-m-d'))
         
         {
@@ -150,8 +149,8 @@ public function AdminLeave(Request $request){
     ->where('emp_leaves.type','=','Admin')
     ->join('admins', 'emp_leaves.emp_id', '=', 'admins.id')
     ->select('emp_leaves.*', 'admins.fname')
-    ->orderBy('emp_leaves.id', 'DESC')
-    ->paginate(20);
+    ->orderBy('emp_leaves.id', 'DESC')->get();
+    ;
     return view('admin.leave_info.admin_leave_info', compact('data'));
 }
 
@@ -199,8 +198,8 @@ public function EmpLeave(Request $request){
     ->where('emp_leaves.type','=','Employee')
     ->join('employees', 'emp_leaves.emp_id', '=', 'employees.id')
     ->select('emp_leaves.*', 'employees.fname')
-    ->orderBy('emp_leaves.id', 'DESC')
-    ->paginate(20);
+    ->orderBy('emp_leaves.id', 'DESC')->get();
+    ;
     return view('admin.leave_info.emp_leave_info', compact('data'));
 }
 
@@ -208,7 +207,7 @@ public function EmpLeaveStatusApprove(Request $request,$id)
     {
         $leaveStatus=EmpLeave::find($request->id); 
         $leave_remaining = ($leaveStatus->leave_remaining) - ($leaveStatus->no_days);
-        if($leaveStatus->update(['l_status'=>1,'leave_remaining'=>$leave_remaining]))
+        if($leaveStatus->update(['l_status'=>1,'leave_remaining'=>$leave_remaining,'management_id'=>1]))
         {
             $emp_data=Employee::find($leaveStatus->emp_id);
             $emp_data['approve_status']=1;
@@ -222,11 +221,10 @@ public function EmpLeaveStatusApprove(Request $request,$id)
     return $response;
     }
 //  Leave Reject Code 
-//  Leave Reject Code 
     public function EmpLeaveStatusReject(Request $request,$id)
     {
         $leaveStatus=EmpLeave::find($request->id); 
-        if($leaveStatus->update(['l_status'=>2]))
+        if($leaveStatus->update(['l_status'=>2,'management_id'=>1]))
         {
             $emp_data=Employee::find($leaveStatus->emp_id);
             $emp_data['approve_status']=0;
@@ -250,15 +248,14 @@ public function EmpLeaveStatusApprove(Request $request,$id)
 
         $data=EmpLeave::where('emp_leaves.emp_id',$employeeresult->id) 
         ->join('employees', 'emp_leaves.emp_id', '=', 'employees.id')
-        ->orderBy('emp_leaves.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('emp_leaves.id', 'DESC')->get();
+        ;
         return view('admin.leave_info.emp_leave_info', compact('data'));
     }
 
     function primary_leave_status(Request $request,EmpLeave $empLeave){
         $empLeave=EmpLeave::find($request->id); 
        $data=$request->all();
-       $data['approved_by']=Auth::user()->type;
         if($empLeave->update($data))
         {
             return back()->with('message', 'Leave Status Updated Successfully');

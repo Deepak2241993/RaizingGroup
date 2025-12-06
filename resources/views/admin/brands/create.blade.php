@@ -1,263 +1,303 @@
-
 @extends('layouts.masteradmin')
 @section('body')
 
-<div class="page-content">
-<div class="row">
-    <div class="col-12">
-        @if ($errors->any())
-    <div class="alert alert-text-text-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-        <div class="card">
-            <div class="card-body">
-                <div class="card">
-                        <div class="card-header"><strong>Brand</strong><small> Form</small></div>
-                        @if(isset($brand))
-                        <form action="{{route('brands.update',$brand->id)}}" method="post" enctype="multipart/form-data">
+<div class="content-wrapper">
+
+    <!-- PAGE HEADER -->
+    <section class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>{{ isset($brand) ? 'Edit Brand' : 'Add Brand' }}</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ url('dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('company.index') }}">Company</a></li>
+                        <li class="breadcrumb-item active">{{ isset($brand) ? 'Edit Brand' : 'Add Brand' }}</li>
+                    </ol>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- MAIN CONTENT -->
+    <section class="content">
+        <div class="container-fluid">
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+
+            <div class="card">
+
+                <div class="card-header bg-dark text-white">
+                    <h3 class="card-title">
+                        <strong>Brand Form</strong>
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
+                    @if(isset($brand))
+                        <form action="{{ route('brands.update',$brand->id) }}" method="POST" enctype="multipart/form-data">
                         @method('PUT')
-                            @else
-                      <form action="{{route('brands.store')}}" method="post" enctype="multipart/form-data">
-                        @endif
+                    @else
+                        <form action="{{ route('brands.store') }}" method="POST" enctype="multipart/form-data">
+                    @endif
+
                         @csrf
-                          <div class="card-body card-block">
-                            <div class="form-group mb-4">
-                                <label for="brand" class=" form-control-label">Company</label>
-                                <div id="brand_add_row" class="mb-4">
-                                    <div class="row">
-                                        <div class="col-lg-10">
-                                              <div class="row">
-                                                <div class="col-lg-10">
-                                                    <input type="text" class="form-control" readonly value="{{$company->compname}}">
-                                                    <input type="hidden" name="bcomp" class="form-control" readonly value="{{$company->id}}">
-                                        </div>
-                                        </div>
-                 
-                                    </div>
-                                </div>
-                            </div>
-							<div class="form-group mb-4">
-                                <label for="brand" class=" form-control-label">Brand<span class="text-danger">*</span></label>
-                                <div id="brand_add_row">
-                                    <div class="row">
-                                        <div class="col-lg-10">
-                                            <input type="text" id="bname" name="bname" value="{{isset($brand)?$brand->bname:''}}" placeholder="Enter company's brand name" class="form-control"required>
-                                        </div>
-                 
-                                    </div>
-                                </div>
+
+                        <div class="row">
+
+                            <!-- COMPANY NAME -->
+                            <div class="col-md-6 mb-3">
+                                <label>Company</label>
+                                <input type="text" class="form-control" readonly value="{{ $company->compname }}">
+                                <input type="hidden" name="bcomp" value="{{ $company->id }}">
                             </div>
 
-							
+                            <!-- BRAND NAME -->
+                            <div class="col-md-6 mb-3">
+                                <label>Brand Name <span class="text-danger">*</span></label>
+                                <input type="text" id="bname" name="bname"
+                                       class="form-control"
+                                       placeholder="Enter brand name"
+                                       value="{{ isset($brand) ? $brand->bname : '' }}" required>
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- BRAND EMAIL & MOBILE (Multiple Fields) -->
+                        <div class="form-group mt-3">
+                            <label>Brand Email & Mobile <span class="text-danger">*</span></label>
 
                             @if(isset($brand))
-                            {{-- Thid Code For Update Section --}}
-                            <div class="form-group mb-4">
-                                <label for="bemail" class="form-control-label">Brand's Email & Mobile<span class="text-danger">*</span></label>
-                                <div class="row">
-                                    @php
-                                        $loopemail = explode(',', $brand->bemail);  
-                                        $loopmob = explode(',', $brand->bmob); 
-                                        // print_r($loopemail); die();
-                                    @endphp
-                                    @foreach($loopemail as $key=>$value)
-                                    <div id="brand_detail_more_loop{{$key}}">
-                                            <div class="row mb-4">
-                                                <div class="col-lg-5">
-                                                    <input type="email" name="bemail[]" id="bemail_{{ $key }}" value="{{ $value }}" placeholder="Provide Email" class="form-control" required>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <input type="number" name="bmob[]" id="bmob_{{ $key }}" value="{{ $loopmob[$key] }}" placeholder="Provide Mobile" class="form-control" required oninput="this.value = this.value.slice(0, 10);">
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    <button class="btn btn-danger btn_removeloop" id="{{ $key }}">-Remove</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                    <div id="brand_detail_more"></div>
-                                    
-                                    
-                                </div>
-                                <button type="button" class="btn btn-success mt-4" id="brand_mail">+Add</button>
-                            </div>
-                            {{-- Thid Code For Update Section End --}}
-                            @else
-
-                            <div class="form-group mb-4">
-                                <label for="bemail" class="form-control-label">Brand's Email & Mobile<span class="text-danger">*</span></label>
-                                <div id="brand_detail_more">
-                                    <div class="row">
-                                        <div class="col-lg-5">
-                                            <input type="email" name="bemail[]" id="bemail" placeholder="Provide Email" class="form-control" required>
-                                        </div>
-                                        <div class="col-lg-5">
-                                            <input type="number" name="bmob[]" id="bmob" placeholder="Provide Mobile" class="form-control" required pattern="/^-?\d+\.?\d*$/" onkeypress="if(this.value.length==10) return false;" >
-                                            
-                                        </div>
-                                        <div class="col-lg-2">
-                                            <button type="button" class="btn btn-success" id="brand_mail">+Add</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
-
-                            <div class="form-group mb-4">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group mb-4">
-                                            <label for="bstreet" class=" form-control-label">Street</label>
-                                            <input type="text" name="bstreet" id="bstreet" value="{{isset($brand->bstreet)?$brand->bstreet:''}}" placeholder="Enter street name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group mb-4">
-                                            <label for="bcity" class=" form-control-label">City</label>
-                                            <input type="text" name="bcity" id="bcity" value="{{isset($brand)?$brand->bcity:''}}" placeholder="Enter your city" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group mb-4">
-                                            <label for="bcode" class=" form-control-label">Postal Code</label>
-                                            <input type="text" name="bcode" id="bcode" value="{{isset($brand->bcode)?$brand->bcode:''}}" placeholder="Postal Code" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-group mb-4">
-                                            <label for="bcountry" class="form-control-label">Country<span class="text-danger">*</span></label>
-                                            <input type="text" name="bcountry" id="bcountry" value="{{isset($brand->bcountry)?$brand->bcountry:''}}" placeholder="Country name" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr style="border-bottom: 1px solid grey;">
-                            <div class="form-group mb-4">
-                                <label for="division" class=" form-control-label">Add Division Details</label>
-                                @if(isset($brand))
-
                                 @php
-                                    $bdivision = explode(',', $brand->bdivision);  
-                                    $div_mail = explode(',', $brand->div_mail); 
-                                    $div_mob = explode(',', $brand->div_mob); 
-                                    // print_r($loopemail); die();
+                                    $loopemail = explode(',', $brand->bemail);
+                                    $loopmob   = explode(',', $brand->bmob);
                                 @endphp
-                                @foreach($bdivision as $key=>$value)
-                                <div id="add_div_detail_loop{{$key}}">
-                                    <div class="row mt-4">
-                                         <div class="col-lg-3">
-                                            <input type="text" id= "bdivision_{{$key}}" name="bdivision[]" value="{{$value}}" placeholder="Division's Name" class="form-control">
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <input type="email" id= "div_mail_{{$key}}" name="div_mail[]" value="{{$div_mail[$key]}}" placeholder="Division's Email" class="form-control">
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <input type="number" id= "div_mob_{{$key}}" name="div_mob[]" value="{{$div_mob[$key]}}" placeholder="Division's Contact" class="form-control" pattern="/^-?\d+\.?\d*$/" onkeypress="if(this.value.length==10) return false;" >
-                                            
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <button class="btn btn-danger btn_remove_loop" id="{{$key}}">-Remove</button>
-                                        </div>
+
+                                @foreach($loopemail as $key=>$value)
+                                <div class="row mb-2" id="brand_detail_more_loop{{ $key }}">
+                                    <div class="col-md-5">
+                                        <input type="email" name="bemail[]" value="{{ $value }}" class="form-control" placeholder="Provide Email" required >
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="number" name="bmob[]" class="form-control"
+                                               value="{{ $loopmob[$key] }}" maxlength="10"
+                                               oninput="this.value=this.value.slice(0,10)" placeholder="Provide Mobile" required>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn_removeloop" id="{{ $key }}">Remove</button>
                                     </div>
                                 </div>
                                 @endforeach
-                                <div id="add_div_detail"></div>
-                                <button type="button" class="btn btn-success mt-4" id="div_detail">+Add</button>
-                                @else
-                                <div id="add_div_detail">
-                                    <div class="row">
-                                         <div class="col-lg-3">
-                                            <input type="text" id= "bdivision" name="bdivision[]" placeholder="Division's Name" class="form-control">
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <input type="email" id= "div_mail" name="div_mail[]" placeholder="Division's Email" class="form-control">
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <input type="number" id= "div_mob" name="div_mob[]" placeholder="Division's Contact" class="form-control" pattern="/^-?\d+\.?\d*$/" onkeypress="if(this.value.length==10) return false;" >
-                                            
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <button type="button" class="btn btn-success" id="div_detail">+Add</button>
-                                        </div>
+
+                                <div id="brand_detail_more"></div>
+
+                                <button type="button" class="btn btn-success" id="brand_mail">+ Add More</button>
+                            
+                            @else
+                                <div class="row mb-2">
+                                    <div class="col-md-5">
+                                        <input type="email" name="bemail[]" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="number" name="bmob[]" class="form-control"
+                                               maxlength="10" required
+                                               oninput="this.value=this.value.slice(0,10)">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-success" id="brand_mail">+ Add</button>
                                     </div>
                                 </div>
-                                @endif
+
+                                <div id="brand_detail_more"></div>
+                            @endif
+                        </div>
+
+
+                        {{-- Brand Address --}}
+                        <div class="row mt-3">
+                            <div class="col-md-4 mb-3">
+                                <label>Street</label>
+                                <input type="text" name="bstreet" class="form-control"
+                                       value="{{ $brand->bstreet ?? '' }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>City</label>
+                                <input type="text" name="bcity" class="form-control"
+                                       value="{{ $brand->bcity ?? '' }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>Postal Code</label>
+                                <input type="text" name="bcode" class="form-control"
+                                       value="{{ $brand->bcode ?? '' }}">
                             </div>
 
-                            <div class="form-group mb-4">
-                                <input type="submit" name="brandok" value="{{isset($brand)?'Update':'Submit'}}" class="form-control btn btn-primary" id="Add_brand_submit"style="margin-top: 15px; border-radius: 6px; width: 130px;" />
-                                <a href="{{route('brands.index')}}" class="btn btn-dark" style="margin-top: 15px; border-radius: 6px; width: 130px;" >Back</a>   
+                            <div class="col-md-4 mb-3">
+                                <label>Country <span class="text-danger">*</span></label>
+                                <input type="text" name="bcountry" class="form-control" required
+                                       value="{{ $brand->bcountry ?? '' }}">
                             </div>
-                          </div>
-                      </form>
-                    
-                  </div>
+                        </div>
+
+
+
+                        <!-- DIVISION DETAILS -->
+                        <hr>
+                        <label><strong>Division Details</strong></label>
+
+                        @if(isset($brand))
+                        @php
+                            $bdivision = explode(',', $brand->bdivision);
+                            $div_mail  = explode(',', $brand->div_mail);
+                            $div_mob   = explode(',', $brand->div_mob);
+                        @endphp
+
+                        @foreach($bdivision as $key=>$value)
+                        <div class="row mt-2" id="add_div_detail_loop{{ $key }}">
+                            <div class="col-md-3">
+                                <input type="text" name="bdivision[]" value="{{ $value }}" class="form-control" placeholder="Division Name">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="email" name="div_mail[]" value="{{ $div_mail[$key] }}" class="form-control" placeholder="Division Email">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="div_mob[]" value="{{ $div_mob[$key] }}" class="form-control"
+                                       maxlength="10" oninput="this.value=this.value.slice(0,10)">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-danger btn_remove_loop" id="{{ $key }}">Remove</button>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        <div id="add_div_detail"></div>
+
+                        <button type="button" class="btn btn-success mt-2" id="div_detail">+ Add More</button>
+
+                        @else
+
+                        <div class="row mt-2" id="add_div_detail">
+                            <div class="col-md-3">
+                                <input type="text" name="bdivision[]" class="form-control" placeholder="Division Name">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="email" name="div_mail[]" class="form-control" placeholder="Division Email">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="div_mob[]" class="form-control"
+                                       maxlength="10" oninput="this.value=this.value.slice(0,10)">
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-success" id="div_detail">+ Add</button>
+                            </div>
+                        </div>
+
+                        @endif
+
+
+
+                        <!-- SUBMIT BUTTON -->
+                        <div class="form-group mt-4">
+                            <button type="submit"
+                                    class="btn btn-primary"
+                                    style="width:150px;">
+                                {{ isset($brand) ? 'Update' : 'Submit' }}
+                            </button>
+
+                            <a href="{{ route('brands.index') }}" class="btn btn-dark" style="width:150px;">
+                                Back
+                            </a>
+                        </div>
+
+                    </form>
+
                 </div>
             </div>
+
         </div>
-    </div> <!-- end col -->
-</div>
+    </section>
+
 </div>
 
 @endsection
 
+
 @push('footer-section-code')
-<!-- include summernote css/js -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
 <script>
-   $(document).ready(function(){
-          var i=1;
-          $('#add_more_brand').click(function(){
-               i++;
-               $('#brand_add_row').append('<div class="row" id="brand_add_row'+i+'" style="margin-top:5px;"><div class="col-lg-10"><input type="text" id="brand" name="cbrand[]" placeholder="Enter company\'s brand name" class="form-control"></div><div class="col-lg-2"><img src="images/cross.png" alt="" id="'+i+'" width="37" class="btn_remove"></div></div>');
-           });
-           $(document).on('click', '.btn_remove', function(){
-           var button_id = $(this).attr("id");
-           $('#brand_add_row'+button_id+'').remove();
-            });
+$(document).ready(function(){
 
+    var x = 1;
 
-           var x=1;
-          $('#brand_mail').click(function(){
-               x++;
-               $('#brand_detail_more').append('<div class="row" id="brand_detail_more'+x+'" style="margin-top:5px;"><div class="col-lg-5"><input type="email" name="bemail[]" id="bemail" placeholder="Provide Email" class="form-control"></div><div class="col-lg-5"><input type="number" name="bmob[]" id="bmob" placeholder="Provide Mobile" class="form-control"></div><div class="col-lg-2"><button class="btn btn-danger btn_remove1" id="'+x+'">-Remove</button></div></div>');
-           });
-           $(document).on('click', '.btn_remove1', function(){
-           var button_id1 = $(this).attr("id");
-           $('#brand_detail_more'+button_id1+'').remove();
-            });
+    // ADD brand email & mobile
+    $('#brand_mail').click(function(){
+        x++;
+        $('#brand_detail_more').append(`
+        <div class="row mb-2" id="brand_detail_more`+x+`">
+            <div class="col-md-5">
+                <input type="email" name="bemail[]" class="form-control" placeholder="Provide Email">
+            </div>
+            <div class="col-md-5">
+                <input type="number" name="bmob[]" class="form-control" maxlength="10"
+                       oninput="this.value=this.value.slice(0,10)" placeholder="Provide Mobile">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-danger btn_remove1" id="`+x+`">Remove</button>
+            </div>
+        </div>`);
+    });
 
-            $(document).on('click', '.btn_removeloop', function(){
-           var button_id_loop = $(this).attr("id");
-           $('#brand_detail_more_loop'+button_id_loop+'').remove();
-            });
+    // Remove dynamic email/mobile field
+    $(document).on('click','.btn_remove1',function(){
+        $('#brand_detail_more'+$(this).attr('id')).remove();
+    });
 
+    $(document).on('click','.btn_removeloop',function(){
+        $('#brand_detail_more_loop'+$(this).attr('id')).remove();
+    });
 
-            var y=1;
-          $('#div_detail').click(function(){
-               y++;
-               $('#add_div_detail').append('<div class="row" id="add_div_detail'+y+'" style="margin-top:5px;"><div class="col-lg-3"><input type="text" name="bdivision[]" placeholder="Division\'s Name" class="form-control"></div><div class="col-lg-3"><input type="email" name="div_mail[]" placeholder="Division\'s Email" class="form-control"></div><div class="col-lg-3"><input type="number" name="div_mob[]" placeholder="Division\'s Contact" class="form-control"></div><div class="col-lg-3"><button class="btn btn-danger btn_remove2"  id="'+y+'">-Remove</button></div></div>');
-           });
-           $(document).on('click', '.btn_remove2', function(){
-           var button_id2 = $(this).attr("id");
-           $('#add_div_detail'+button_id2+'').remove();
-            });
-            $(document).on('click', '.btn_remove_loop', function(){
-           var btn_remove_loop = $(this).attr("id");
-           $('#add_div_detail_loop'+btn_remove_loop+'').remove();
-            });
-     });
-    </script>
+    // ADD division
+    var y = 1;
+    $('#div_detail').click(function(){
+        y++;
+        $('#add_div_detail').append(`
+        <div class="row mt-2" id="add_div_detail`+y+`">
+            <div class="col-md-3"><input type="text" name="bdivision[]" class="form-control" placeholder="Division Name"></div>
+            <div class="col-md-3"><input type="email" name="div_mail[]" class="form-control" placeholder="Division Email"></div>
+            <div class="col-md-3"><input type="number" name="div_mob[]" maxlength="10" class="form-control"
+                  oninput="this.value=this.value.slice(0,10)" placeholder="Division Contact"></div>
+            <div class="col-md-3"><button class="btn btn-danger btn_remove2" id="`+y+`">Remove</button></div>
+        </div>`);
+    });
+
+    // REMOVE division
+    $(document).on('click','.btn_remove2',function(){
+        $('#add_div_detail'+$(this).attr('id')).remove();
+    });
+
+    $(document).on('click','.btn_remove_loop',function(){
+        $('#add_div_detail_loop'+$(this).attr('id')).remove();
+    });
+
+});
+</script>
+
 @endpush

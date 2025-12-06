@@ -16,7 +16,7 @@ class BrandController extends Controller
     public function index()
     {
 
-        $data = Brand::where('is_deleted',0)->orderBy('id', 'DESC')->paginate(20);
+        $data = Brand::where('is_deleted',0)->orderBy('id', 'DESC')->get();
         return view('admin.brands.index', compact('data'));
     }
 
@@ -58,7 +58,7 @@ class BrandController extends Controller
      */
     public function show(Brand $brand,Company $company)
     {
-        $data=Brand::where('bcomp',$company->id)->where('is_deleted',0)->orderBy('id', 'DESC')->paginate(20);
+        $data=Brand::where('bcomp',$company->id)->where('is_deleted',0)->orderBy('id', 'DESC')->get();
         return view('admin.brands.index', compact('data'));
     }
 

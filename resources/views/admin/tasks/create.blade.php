@@ -1,90 +1,148 @@
 @extends('layouts.masteradmin')
+
 @section('body')
-<div class="page-content">
-<div class="row">
-    <div class="col-12">
-        @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-    <div class="card-body">
-                <div class="card">
-                <div class="card-header"><strong>Super Admin Task</strong><small> Form</small></div>
-               
-                @if(isset($mytask))
-                <form action="{{route('tasks.update',$mytask->id)}}" method="post" enctype="multipart/form-data">
-                @method('PUT')
-                <input type="hidden" value="{{$mytask->id}}" name="id">
-                    @else
-                    <form action="{{route('tasks.store')}}" method="post" enctype="multipart/form-data">
-                        @endif
-                        @csrf
-                    <div class="card-body card-block">
-                      <div class="form-group mb-4">
-                          <label for="brand" class=" form-control-label">Brand<span class="text-danger">*</span></label>
-                          <select name="brand" id="brand" class="form-control" onchange="employee_fetch(this.value)" required>
-                              <option value="#">Please select Brand first</option>
-                              @foreach($brand as $key => $value)
-                              <option value="{{ $value->id }}" {{ isset($mytask) && $value->id == $mytask->brand ? 'selected' : '' }}>
-                                  {{ $value->bname }}
-                              </option>
-                          @endforeach
 
-                              
-                          </select>
-                      </div>
+<div class="content-wrapper">
 
-                      <div class="form-group mb-4">
-                          <label class="form-control-label">Task Title<span class="text-danger">*</span></label>
-                          <input type="text" id="t_title" class="form-control" name="t_title" value="{{isset($mytask)?$mytask->t_title:''}}" required>
-                      </div>
+    <!-- Page Header -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>{{ isset($mytask) ? 'Edit Task' : 'Create Task' }}</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ route('master-dashboard') }}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('tasks.index') }}">Tasks</a></li>
+              <li class="breadcrumb-item active">{{ isset($mytask) ? 'Edit Task' : 'New Task' }}</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
 
-                      <div class="form-group mb-4">
-                          <label>Upload task related documents/images (if any)</label>
-                          <input type="file" name="t_file" multiple="multiple" class="form-control">
-                      </div>
-                      <div class="form-group mb-4">
-                          <label for="tdetail" class="form-control-label">Task Detail</label>
-                          <textarea name="t_detail" id="t_detail" rows="5" placeholder="Detail..." class="form-control">{{isset($mytask)?$mytask->t_detail:''}}</textarea>
-                      </div>
+    <!-- Page Content -->
+    <section class="content">
+      <div class="container-fluid">
+
+        <div class="row">
+          <div class="col-12">
+
+            <!-- Validation Errors -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- Form Card -->
+            <div class="card">
+
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <strong>Super Admin Task</strong>
+                        <small class="text-muted"> Form</small>
+                    </h3>
+                </div>
+
+                <div class="card-body">
+
                     @if(isset($mytask))
-                    <div class="form-group mb-4">
-                        <label for="comments" class="form-control-label">Comments</label>
-                        <textarea name="comments" id="comments" rows="5" placeholder="Comments..." class="form-control">{{isset($mytask)?$mytask->comments:''}}</textarea>
+                        <form action="{{ route('tasks.update',$mytask->id) }}" method="post" enctype="multipart/form-data">
+                            @method('PUT')
+                            <input type="hidden" name="id" value="{{ $mytask->id }}">
+                    @else
+                        <form action="{{ route('tasks.store') }}" method="post" enctype="multipart/form-data">
+                    @endif
+
+                    @csrf
+
+                    <!-- Brand -->
+                    <div class="form-group mb-3">
+                        <label>Brand <span class="text-danger">*</span></label>
+                        <select name="brand" id="brand" class="form-control" onchange="employee_fetch(this.value)" required>
+                            <option value="">Please select Brand</option>
+                            @foreach($brand as $value)
+                                <option value="{{ $value->id }}" 
+                                    {{ isset($mytask) && $value->id == $mytask->brand ? 'selected' : '' }}>
+                                    {{ $value->bname }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="form-group mb-4">
-                        <label for="tdetail" class="form-control-label">Task Status</label>
-                        <select class="form-select" name="status">
-                            <option @if(isset($mytask) && $mytask->status=='1') selected="selected" @endif value="1">Completed</option>
-                            <option @if(isset($mytask) && $mytask->status=='0') selected="selected" @endif value="0">Incompleted</option>
+
+                    <!-- Task Title -->
+                    <div class="form-group mb-3">
+                        <label>Task Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="t_title" 
+                               value="{{ $mytask->t_title ?? '' }}" required>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="form-group mb-3">
+                        <label>Upload task related documents/images (optional)</label>
+                        <input type="file" name="t_file" class="form-control" multiple>
+                    </div>
+
+                    <!-- Task Detail -->
+                    <div class="form-group mb-3">
+                        <label>Task Detail</label>
+                        <textarea name="t_detail" rows="5" class="form-control">{{ $mytask->t_detail ?? '' }}</textarea>
+                    </div>
+
+                    <!-- Comments (Only if editing) -->
+                    @if(isset($mytask))
+                    <div class="form-group mb-3">
+                        <label>Comments</label>
+                        <textarea name="comments" rows="5" class="form-control">{{ $mytask->comments ?? '' }}</textarea>
+                    </div>
+
+                    <!-- Task Status -->
+                    <div class="form-group mb-3">
+                        <label>Task Status</label>
+                        <select class="form-control" name="status">
+                            <option value="1" {{ $mytask->status == 1 ? 'selected' : '' }}>Completed</option>
+                            <option value="0" {{ $mytask->status == 0 ? 'selected' : '' }}>Incomplete</option>
                         </select>
                     </div>
                     @endif
-                      <div class="form-group mb-4">
-                        <input type="submit" value="{{isset($brand)?'Update':'Submit'}}" class="form-control btn btn-primary" id="Add_brand_submit"style="margin-top: 15px; border-radius: 6px; width: 130px;" />
-                                <a href="{{route('tasks.index')}}" class="btn btn-dark" style="margin-top: 15px; border-radius: 6px; width: 130px;" >Back</a>   
-                        
-                      </div>
+
+                    <!-- Submit + Back Buttons -->
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary" style="width:130px;">
+                            {{ isset($mytask) ? 'Update' : 'Submit' }}
+                        </button>
+
+                        <a href="{{ route('tasks.index') }}" class="btn btn-dark" style="width:130px;">
+                            Back
+                        </a>
                     </div>
-                </form>
+
+                    </form>
+
+                </div>
+
             </div>
+
+          </div>
         </div>
-    </div> <!-- end col -->
-</div>
+
+      </div>
+    </section>
+
 </div>
 
 @endsection
 
 @push('footer-section-code')
-<!-- include summernote css/js -->
+
+<!-- Summernote -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
-
 @endpush
-

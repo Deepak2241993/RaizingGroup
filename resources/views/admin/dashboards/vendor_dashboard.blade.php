@@ -1,75 +1,111 @@
 @extends('layouts.masteradmin')
 @section('body')
-<div class="page-content">
-    <div class="container-fluid">
 
-        <!-- start page title -->
-       <h2>Vendor Dashboard</h2>
-        <!-- end page title -->
+<div class="content-wrapper">
 
-        <div class="row">
-           
-            <div class="col-xl-12">
-                <div class="row">
-                                        
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <a href="{{route('vendor-task.index')}}">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div class="flex-grow-1">
-                                            <p class="text-muted fw-medium">Active Tasks</p>
-                                            <h4 class="mb-0">{{$activetask}}</h4>
-                                        </div>
+    <!-- ============================
+        PAGE HEADER
+    ============================ -->
+    <section class="content-header">
+        <div class="container-fluid">
 
-                                        <div class="flex-shrink-0 align-self-center">
-                                            <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                                <span class="avatar-title rounded-circle bg-primary">
-                                                    <i class="fa fa-thumb-tack font-size-24"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <a href="{{route('vendor-task.index')}}">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <div class="flex-grow-1">
-                                            <p class="text-muted fw-medium">Task Completed</p>
-                                            <h4 class="mb-0">{{$completedtask}}</h4>
-                                        </div>
+            <div class="row mb-2">
 
-                                        <div class="flex-shrink-0 align-self-center">
-                                            <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                                <span class="avatar-title rounded-circle bg-primary">
-                                                    <i class="fa fa-check-square-o font-size-24"  aria-hidden="true"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    
+                <div class="col-sm-6">
+                    <h1>Vendor Dashboard</h1>
                 </div>
-                <!-- end row -->
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{route('master-dashboard')}}">Home</a></li>
+                        <li class="breadcrumb-item active">Vendor Dashboard</li>
+                    </ol>
+                </div>
 
             </div>
+
         </div>
-        <!-- end row -->
+    </section>
 
-        
+    <!-- ============================
+        MAIN CONTENT
+    ============================ -->
+    <section class="content">
 
-        
-        <!-- end row -->
-    </div>
-    <!-- container-fluid -->
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-12">
+
+                    <div class="card">
+
+                        <div class="card-header">
+                            <h3 class="card-title">Vendor Overview</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <!-- Vendor Active Tasks -->
+                                <div class="col-lg-3 col-6">
+                                    <div class="small-box bg-info">
+                                        <div class="inner">
+                                            <h3>{{ $activetask }}</h3>
+                                            <p>Active Tasks</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-thumb-tack"></i>
+                                        </div>
+                                        <a href="{{route('vendor-task.index')}}" class="small-box-footer">
+                                            More Info <i class="fas fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Vendor Completed Tasks -->
+                                <div class="col-lg-3 col-6">
+                                    <div class="small-box bg-success">
+                                        <div class="inner">
+                                            <h3>{{ $completedtask }}</h3>
+                                            <p>Completed Tasks</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-check-square-o"></i>
+                                        </div>
+                                        <a href="{{route('vendor-task.index')}}" class="small-box-footer">
+                                            More Info <i class="fas fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer">
+                            Vendor Panel Summary
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
 </div>
+
 @endsection

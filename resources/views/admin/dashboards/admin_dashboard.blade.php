@@ -1,188 +1,177 @@
 @extends('layouts.masteradmin')
 @section('body')
-<div class="page-content">
-    <div class="container-fluid">
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Fixed Layout</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">Layout</a></li>
+              <li class="breadcrumb-item active">Fixed Layout</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
 
-        <!-- start page title -->
-       <h2>Admin Dashboard</h2>
-        <!-- end page title -->
+    <!-- Main content -->
+    <section class="content">
 
+      <div class="container-fluid">
         <div class="row">
-           
-            <div class="col-xl-12">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Total Employees</p>
-                                        <h4 class="mb-0">{{$employee}}</h4>
-                                    </div>
+          <div class="col-12">
+            <!-- Default box -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Title</h3>
 
-                                    <div class="flex-shrink-0 align-self-center">
-                                        <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                            <span class="avatar-title">
-                                                <i class="fa fa-user font-size-24"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Total Admin</p>
-                                        <h4 class="mb-0">{{$admin}}</h4>
-                                    </div>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                Start creating your amazing application!
+              </div>
+              <div class="row">
 
-                                    <div class="flex-shrink-0 align-self-center ">
-                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                            <span class="avatar-title rounded-circle bg-primary">
-                                                <i class="fa fa-user-secret font-size-24" aria-hidden="true"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Total Employees -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ $employee }}</h3>
+                            <p>Total Employees</p>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Total Vendor</p>
-                                        <h4 class="mb-0">{{$vendor}}</h4>
-                                    </div>
-
-                                    <div class="flex-shrink-0 align-self-center">
-                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                            <span class="avatar-title rounded-circle bg-primary">
-                                                <i class="fa fa-users font-size-24"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="icon">
+                            <i class="fa fa-user"></i>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Employee Pending Task</p>
-                                        <h4 class="mb-0">{{$emptask}}</h4>
-                                    </div>
-
-                                    <div class="flex-shrink-0 align-self-center">
-                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                            <span class="avatar-title rounded-circle bg-primary">
-                                                <i class="fa fa-thumb-tack font-size-24"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Admin Pending Task</p>
-                                        <h4 class="mb-0">{{$admintask}}</h4>
-                                    </div>
-
-                                    <div class="flex-shrink-0 align-self-center">
-                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                            <span class="avatar-title rounded-circle bg-primary">
-                                                <i class="fa fa-tasks font-size-24"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Vendor Pending Task</p>
-                                        <h4 class="mb-0">{{$vendortask}}</h4>
-                                    </div>
-
-                                    <div class="flex-shrink-0 align-self-center">
-                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                            <span class="avatar-title rounded-circle bg-primary">
-                                                <i class="fa fa-tasks font-size-24"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Employee Leave Approval Pending</p>
-                                        <h4 class="mb-0">{{$empleave}}</h4>
-                                    </div>
-
-                                    <div class="flex-shrink-0 align-self-center">
-                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                            <span class="avatar-title rounded-circle bg-primary">
-                                                <i class="fa fa-calendar font-size-24"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mini-stats-wid">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <div class="flex-grow-1">
-                                        <p class="text-muted fw-medium">Admin Leave Approval Pending</p>
-                                        <h4 class="mb-0">{{$adminleave}}</h4>
-                                    </div>
-
-                                    <div class="flex-shrink-0 align-self-center">
-                                        <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                            <span class="avatar-title rounded-circle bg-primary">
-                                                <i class="fa fa-calendar font-size-24"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- end row -->
+
+                <!-- Total Admin -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ $admin }}</h3>
+                            <p>Total Admin</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-user-secret"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Total Vendor -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ $vendor }}</h3>
+                            <p>Total Vendor</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Employee Pending Task -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>{{ $emptask }}</h3>
+                            <p>Employee Pending Task</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-thumb-tack"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Admin Pending Task -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3>{{ $admintask }}</h3>
+                            <p>Admin Pending Task</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-tasks"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Vendor Pending Task -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-secondary">
+                        <div class="inner">
+                            <h3>{{ $vendortask }}</h3>
+                            <p>Vendor Pending Task</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-tasks"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Employee Leave Approval Pending -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ $empleave }}</h3>
+                            <p>Employee Leave Approval Pending</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Admin Leave Approval Pending -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ $adminleave }}</h3>
+                            <p>Admin Leave Approval Pending</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More Info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
 
             </div>
+
+              <div class="card-footer">
+                Footer
+              </div>
+              <!-- /.card-footer-->
+            </div>
+            <!-- /.card -->
+          </div>
         </div>
-        <!-- end row -->
+      </div>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
 
-        
 
-        
-        <!-- end row -->
-    </div>
-    <!-- container-fluid -->
-</div>
+
 @endsection

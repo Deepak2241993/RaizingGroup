@@ -1,130 +1,195 @@
 @extends('layouts.masteradmin')
 @section('body')
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Responsive Table</h4>
-                <p class="card-title-desc">
-                    Create responsive tables by wrapping any <code>.table</code> in <code>.table-responsive</code>
-                    to make them scroll horizontally on small devices (under 768px).
-                </p>
+@push('csslink')
+    <!-- DataTables -->
+  <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+@endpush
+<div class="content-wrapper">
 
-                <div class="table-responsive">
-                   My All Task
-                    @if(session('message')) <p style="color:rgb(6, 82, 6); font-weight: 600;">{{session('message')}}</p>@endif
-                    <table class="table mb-0">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                              
-                                <th>Vendor Name</th>
-                                <th>Task</th>
-                                <th>Assign Date</th>
-                                <th>Deadline Date</th>
-                                <th>File</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($data as $value)
-                            <tr>
-                                <th scope="row">{{$loop->iteration}}</th>
-                                <td>{{$value->vendor_name}}</td>
-                                <td>{{$value->task_detail}}</td>
-                                <td>{{$value->assign_date}}</td>
-                                <td>{{$value->deadline_date}}</td>
-                                <td><a href="{{url('/images/'.$value->task_file)}}" target="_blank" download>Download File</a></td>
-                                
-                                <td><div class="form-check form-switch form-switch-md mb-3" dir="ltr">
-                                    {{-- <input class="form-check-input" type="checkbox" id="SwitchCheckSizemd{{$value->id}}" @if($value->status==1){{'checked'}} @endif> --}}
-                                    
-                                    <label class="form-check-label" for="SwitchCheckSizemd{{$value->id}}">@if($value->status==1)<button class="btn btn-success">Completed</button>@else <button class="btn btn-warning" onClick="update_status('{{$value->id}}')">Incomplete</button> @endif</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="button_align">
-                                        <a href="{{route('vendor-task.edit',$value->id)}}" class="btn btn-outline-primary"><i class="bx bx-pencil"></i> Edit </a> 
-                                       
-                                        @if($usertype=Auth::user()->type =='master_admin')
-                                        <a href="javascript:void(0);"  onClick="deletetasks('{{$value->id}}')" class="btn btn-outline-danger"><i class="bx bx-trash-alt"></i> Delete</a>
-                                        @endif
-                                    </div>
-                                </td>
-                                
-                            </tr>
-                            
-                            @endforeach
-                        </tbody>
-                    </table>
+    <!-- Page Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>My All Vendor Tasks</h1>
                 </div>
-                {{$data->links('vendor.pagination.simple-bootstrap-4')}}
-                
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ url('dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Vendor Tasks</li>
+                    </ol>
+                </div>
             </div>
+
         </div>
-    </div>
+    </section>
+
+
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            @if(session('message'))
+                <p class="text-success font-weight-bold">{{ session('message') }}</p>
+            @endif
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Vendor Name</th>
+                                    <th>Task</th>
+                                    <th>Assign Date</th>
+                                    <th>Deadline Date</th>
+                                    <th>File</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach($data as $value)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $value->vendor_name }}</td>
+                                    <td>{{ $value->task_detail }}</td>
+                                    <td>{{ $value->assign_date }}</td>
+                                    <td>{{ $value->deadline_date }}</td>
+
+                                    <td>
+                                        <a href="{{ url('/images/'.$value->task_file) }}"
+                                           class="btn btn-link"
+                                           target="_blank" download>
+                                            Download
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        @if($value->status == 1)
+                                            <button class="btn btn-success btn-sm">Completed</button>
+                                        @else
+                                            <button class="btn btn-warning btn-sm"
+                                                    onClick="update_status('{{ $value->id }}')">
+                                                Incomplete
+                                            </button>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ route('vendor-task.edit', $value->id) }}"
+                                           class="btn btn-primary btn-sm">
+                                            <i class="bx bx-pencil"></i> Edit
+                                        </a>
+
+                                        @if(Auth::user()->type == 'master_admin')
+                                        <button onclick="deletetasks('{{ $value->id }}')"
+                                                class="btn btn-danger btn-sm">
+                                            <i class="bx bx-trash-alt"></i> Delete
+                                        </button>
+                                        @endif
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
 </div>
+
 @endsection
+
+
 
 @push('footer-section-code')
 
 <script>
-    function deletetasks(tid){
-        if(confirm('Are You sure'))
-        {
-        $.ajax({
-            method:'DELETE',
-            url: '{{ url('master-admin/vendor-task') }}/'+tid,
-            data:{
-                id: tid,
-                _token: '{{ csrf_token() }}'
-            },
-            success:function(response){
-                
-                if(response.success==true)
-                {
+    function deletetasks(id){
+        if(confirm('Are You sure?')){
+            $.ajax({
+                method:'DELETE',
+                url: '{{ url('master-admin/vendor-task') }}/' + id,
+                data:{
+                    id:id,
+                    _token:'{{ csrf_token() }}'
+                },
+                success:function(response){
                     location.reload();
-                    swal("Success!", response.message, "success");
-                    
-
+                    swal("Success!", response.message, response.success ? "success" : "error");
                 }
-                if(response.success==false)
-                {
-                    location.reload();
-                    swal("Deleted!", response.message, "error");
-                    
-
-                }
-                
-            }
-        });
+            });
+        }
     }
-}
-    function update_status(tid){
-        if(confirm('Do you want to change status'))
-        {
-        $.ajax({
-            method:'POST',
-            url: '{{ url('master-admin/vendor-task/') }}/'+tid,
-            data:{
-                id: tid,
-                _token: '{{ csrf_token() }}'
-            },
-            success:function(response){
-                
-                if(response.success)
-                {
-                    location.reload();
-                    swal("Deleted!", "Status is Updated!", "success");
 
+
+    function update_status(id){
+        if(confirm('Do you want to change task status?')){
+            $.ajax({
+                method:'POST',
+                url: '{{ url('master-admin/vendor-task') }}/' + id,
+                data:{
+                    id:id,
+                    _token:'{{ csrf_token() }}'
+                },
+                success:function(response){
+                    if(response.success){
+                        location.reload();
+                        swal("Success!", "Status Updated!", "success");
+                    }
                 }
-                
-            }
-        });
+            });
+        }
     }
-}
-    </script>
+</script>
 
+<!-- DataTables  & Plugins -->
+<script src="{{url('/')}}/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/jszip/jszip.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
 @endpush
+

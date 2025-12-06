@@ -22,8 +22,8 @@ class EmployeeTaskController extends Controller
         $data = EmployeeTask::where('employee_tasks.is_deleted', 0)
         ->join('employees', 'employee_tasks.emp_id', '=', 'employees.id')
         ->select('employee_tasks.*', 'employees.fname as emp_name')
-        ->orderBy('employee_tasks.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('employee_tasks.id', 'DESC')->get();
+        ;
         return view('admin.employeetask.index', compact('data'));
     }
 
@@ -174,8 +174,8 @@ class EmployeeTaskController extends Controller
         ->where('employee_tasks.emp_id', $employeeResult->id)
         ->join('employees', 'employee_tasks.emp_id', '=', 'employees.id')
         ->select('employee_tasks.*', 'employees.fname as emp_name')
-        ->orderBy('employee_tasks.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('employee_tasks.id', 'DESC')->get();
+        ;
         return view('admin.employeetask.index', compact('data'));
     }
 }

@@ -32,15 +32,15 @@ class VendorTaskAssignController extends Controller
            $data = VendorTaskAssign::where('vendor_task_assigns.is_deleted', 0)->where('vendor_id',$vendor_result->id)
            ->join('vendors', 'vendor_task_assigns.vendor_id', '=', 'vendors.id')
            ->select('vendor_task_assigns.*', 'vendors.fname as vendor_name')
-           ->paginate(20);
+           ;
 
         }
         else{
             $data = VendorTaskAssign::where('vendor_task_assigns.is_deleted', 0)
             ->join('vendors', 'vendor_task_assigns.vendor_id', '=', 'vendors.id')
             ->select('vendor_task_assigns.*', 'vendors.fname as vendor_name')
-            ->orderBy('vendor_task_assigns.id', 'DESC')
-            ->paginate(20);
+            ->orderBy('vendor_task_assigns.id', 'DESC')->get();
+            ;
         }
         
         return view('admin.vendor_task.index', compact('data'));

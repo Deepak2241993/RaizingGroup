@@ -23,7 +23,7 @@ class CustomerQueryController extends Controller
     public function index()
     {
         $employees = Employee::where('is_deleted',0)->get();
-        $data = Customer_query::where('is_deleted',0)->orderBy('id', 'DESC')->paginate(10);
+        $data = Customer_query::where('is_deleted',0)->orderBy('id', 'DESC')->get();
         return view('admin.customer-query.index', compact('data','employees'));
     }
 

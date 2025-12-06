@@ -27,8 +27,8 @@ class VendorController extends Controller
         $data = vendor::where('vendors.is_deleted', 0)
         ->join('brands', 'vendors.vbrand', '=', 'brands.id')
         ->select('vendors.*', 'brands.bname')
-        ->orderBy('vendors.id', 'DESC')
-        ->paginate(20);
+        ->orderBy('vendors.id', 'DESC')->get();
+        ;
 
         return view('admin.vendors.index', compact('data'));
     }

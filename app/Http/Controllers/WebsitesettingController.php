@@ -16,7 +16,7 @@ class WebsitesettingController extends Controller
     public function index(Websitesetting $w)
     {
         $page_title="Website Setting";
-        $datas =$w->where('is_deleted',0)->orderBy('id','DESC')->paginate(10);
+        $datas =$w->where('is_deleted',0)->orderBy('id','DESC')->get();;
         return view('admin.settings.index',compact('page_title','datas'));
     }
 
