@@ -131,7 +131,7 @@ class EmployeeController extends Controller
             'type' => 'Admin',
         ]);
         $mailresult=['email'=>$request->official_id,'password'=>$request->empmob[0]];
-        
+        // dd($mailresult);
         Mail::to($request->official_id)
         ->cc($request->personal_id) // Use cc or bcc if there are multiple recipients
         ->send(new AdminMail($mailresult));

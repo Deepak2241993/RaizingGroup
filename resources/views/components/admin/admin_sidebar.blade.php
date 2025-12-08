@@ -193,10 +193,18 @@
                                     class="far fa-circle nav-icon"></i>
                                 <p>Employee Leave</p>
                             </a></li>
+                        
+                        <li class="nav-item"><a href="{{ route('leave.create') }}" class="nav-link"><i
+                                    class="far fa-circle nav-icon"></i>
+                                <p>Admin Leave Apply</p>
+                            </a>
+                        </li>
+
                         <li class="nav-item"><a href="{{ route('AdminLeave') }}" class="nav-link"><i
                                     class="far fa-circle nav-icon"></i>
-                                <p>Admin Leave</p>
-                            </a></li>
+                                <p>Admin Leave Status</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </li>

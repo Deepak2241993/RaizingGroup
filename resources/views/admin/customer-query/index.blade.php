@@ -77,10 +77,11 @@
                                     <!-- Assign Task Modal Button -->
                                     <td>
                                         <button class="btn btn-primary btn-sm"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#assign_task_{{ $key }}">
+                                                data-toggle="modal"
+                                                data-target="#assign_task_{{ $key }}">
                                             Assign Task
                                         </button>
+                                        
                                     </td>
 
                                     <td>{{ $value->created_by }}</td>
@@ -114,8 +115,8 @@
 
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Assign Query As Task</h5>
-                                                <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal"></button>
+                                                <button type="button" class="close"
+                                                        data-dismiss="modal">X</button>
                                             </div>
 
                                             <div class="modal-body">

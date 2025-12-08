@@ -60,6 +60,8 @@ class EmployeeTaskController extends Controller
         $result=$employeeTask->create($data);
         $emp_id = $result->emp_id;
         $empl_result=Employee::find($emp_id);
+        
+
         $result['deadline_date']=$request->deadline_date;
         $email_id = $empl_result->official_id;
         $mailto=array();
