@@ -1,132 +1,194 @@
 @extends('layouts.masteradmin')
+
 @section('body')
+
 @push('csslink')
     <!-- DataTables -->
-  <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{url('/')}}/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 @endpush
-<div class="page-content">
-    <div class="row">
-        <div class="col-lg-12">
+
+
+<div class="content-wrapper">
+
+    <!-- Page Header -->
+    <section class="content-header">
+        <div class="container-fluid">
+
+            <div class="row mb-2">
+
+                <div class="col-sm-6">
+                    <h1>Employee Holidays List (Company Wise)</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                      <li class="breadcrumb-item"><a href="{{ url('/master-admin/dashboard') }}">Home</a></li>
+                      <li class="breadcrumb-item active">Holidays</li>
+                    </ol>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Main Content -->
+    <section class="content">
+
+        <div class="container-fluid">
 
             <div class="card">
-                <div class="card-body">
 
-                    <h4 class="card-title">{{ $page_title }}</h4>
-                    <p class="card-title-desc">
-                        Manage your website settings. Only one settings record is allowed.
-                    </p>
+                <div class="card-body">
 
                     {{-- Success Message --}}
                     @if(session('message'))
                         <p class="text-success fw-bold">{{ session('message') }}</p>
                     @endif
 
+
                     <div class="table-responsive mt-3">
-                        <table class="table table-bordered align-middle">
-                            <thead class="table-light">
+
+                        <h5>Employee Holidays List (Company Wise)</h5>
+
+                        <table id="example1" class="table table-bordered table-striped">
+
+                            <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Website Name</th>
-                                    <th>Logo</th>
-                                    <th>Action</th>
+                                    <th>Company Name</th>
+                                    <th>Brand Name</th>
+                                    <th>View</th>
+
+                                    @if(in_array(Auth::user()->type, ['master_admin','Admin','HR']))
+                                        <th>Action</th>
+                                    @endif
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($datas as $value)
-                                    @if($value->id == 1)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $value->web_name }}</td>
 
-                                        <td>
-                                            <img src="{{ url('/images/settings/'.$value->web_logo) }}" 
-                                                 alt="{{ $value->web_logo }}" 
-                                                 style="height: 80px;" 
-                                                 class="img-thumbnail">
-                                        </td>
+                                @foreach($data as $value)
+                                <tr>
 
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $value->company_name }}</td>
+                                    <td>{{ $value->brand }}</td>
+
+                                    <td>
+                                        <a href="{{ route('viewholidays', $value->id) }}"
+                                           class="btn btn-primary btn-sm">
+                                            View Holidays
+                                        </a>
+                                    </td>
+
+                                    {{-- Role Based Permissions --}}
+                                    @if(in_array(Auth::user()->type, ['master_admin','Admin','HR']))
                                         <td>
-                                            <a href="{{ route('settings.edit', $value->id) }}" 
-                                               class="btn btn-outline-primary btn-sm">
-                                                <i class="bx bx-pencil"></i> Edit
-                                            </a>
+                                            <div class="btn-group">
+
+                                                <!-- Edit -->
+                                                <a href="{{ route('holiday.edit', $value->id) }}"
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="bx bx-pencil"></i> Edit
+                                                </a>
+
+                                                <!-- Delete -->
+                                                @if(Auth::user()->type == 'master_admin')
+                                                    <button class="btn btn-outline-danger btn-sm"
+                                                            onclick="deleteHolidays('{{ $value->id }}')">
+                                                        <i class="bx bx-trash-alt"></i> Delete
+                                                    </button>
+                                                @endif
+
+                                            </div>
                                         </td>
-                                    </tr>
                                     @endif
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
 
-                    {{-- Pagination --}}
-                    <div class="mt-3">
-                        {{ $datas->links('vendor.pagination.simple-bootstrap-4') }}
+                                </tr>
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
                     </div>
 
                 </div>
+
             </div>
 
         </div>
-    </div>
+
+    </section>
+
 </div>
 
 @endsection
 
 
+
 @push('footer-section-code')
+
 <script>
-function deletepages(tid){
-    if(confirm('Are You sure?')) {
-        $.ajax({
-            method:'DELETE',
-            url: '{{ url('admin/settings') }}/' + tid,
-            data:{
-                id: tid,
-                _token: '{{ csrf_token() }}'
-            },
-            success:function(response){
-                if(response.success){
-                    location.reload();
-                    swal("Deleted!", "Data Deleted Successfully!", "error");
-                }
+function deleteHolidays(id) {
+
+    if(!confirm("Are you sure to delete?")) return;
+
+    $.ajax({
+        method: 'DELETE',
+        url: '{{ url('master-admin/holiday') }}/' + id,
+        data: {
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+
+            if(response.success) {
+                swal("Success!", response.message, "success");
+            } else {
+                swal("Error!", response.message, "error");
             }
-        });
-    }
+
+            setTimeout(() => location.reload(), 800);
+        }
+    });
+
 }
 </script>
-<!-- DataTables  & Plugins -->
+
+
+<!-- DATATABLE SCRIPTS -->
 <script src="{{url('/')}}/admin/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
 <script src="{{url('/')}}/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+
 <script src="{{url('/')}}/admin/plugins/jszip/jszip.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/pdfmake/pdfmake.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/pdfmake/vfs_fonts.js"></script>
+
 <script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{url('/')}}/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
-<script>
-  $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });
-</script>
-@endpush
 
+<script>
+$(function () {
+
+    $("#example1").DataTable({
+        responsive: true,
+        autoWidth: false,
+        lengthChange: false,
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+});
+</script>
+
+@endpush
